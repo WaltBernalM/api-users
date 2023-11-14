@@ -6,10 +6,9 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "USERS_APPLICATIONS")
-public class UserApplications {
+public class UserApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
     private Integer id;
 
     @ManyToOne
