@@ -4,6 +4,7 @@ import com.bwl.apiusers.assemblers.ApplicationModelAssembler;
 import com.bwl.apiusers.exceptions.ApplicationNotFoundException;
 import com.bwl.apiusers.models.Application;
 import com.bwl.apiusers.repositories.ApplicationRepository;
+import com.bwl.apiusers.utils.SortDirection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/applications")
 public class ApplicationController {
     private final ApplicationRepository repository;
     private final ApplicationModelAssembler assembler;
@@ -35,17 +36,17 @@ public class ApplicationController {
         this.assembler = assembler;
     }
 
-    private Sort.Direction getSortDirection(String direction) {
-        if (direction == null || direction.isEmpty() || direction.equalsIgnoreCase("asc")) {
-            return Sort.Direction.ASC;
-        } else if (direction.equalsIgnoreCase("desc")) {
-            return Sort.Direction.DESC;
-        } else {
-            throw new IllegalArgumentException("Invalid sort direction: " + direction);
-        }
-    }
+//    private Sort.Direction getSortDirection(String direction) {
+//        if (direction == null || direction.isEmpty() || direction.equalsIgnoreCase("asc")) {
+//            return Sort.Direction.ASC;
+//        } else if (direction.equalsIgnoreCase("desc")) {
+//            return Sort.Direction.DESC;
+//        } else {
+//            throw new IllegalArgumentException("Invalid sort direction: " + direction);
+//        }
+//    }
 
-    @GetMapping("/applications/{id}")
+    @GetMapping("/{id}")
     public EntityModel<Application> one(@PathVariable Integer id) {
         Application app = repository.findById(id).orElseThrow(() -> new ApplicationNotFoundException(id));
 
@@ -58,7 +59,7 @@ public class ApplicationController {
 //                .map(assembler::toModel).collect(Collectors.toList());
 //        return CollectionModel.of(applications, linkTo(methodOn(ApplicationController.class).all()).withSelfRel());
 //    }
-    @GetMapping("/applications")
+    @GetMapping("")
     public ResponseEntity<Map<String, Object>> all(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
@@ -71,11 +72,11 @@ public class ApplicationController {
             if (sort[0].contains(",")) {
                 for (String sortOrder : sort) {
                     String[] _sort = sortOrder.split(",");
-                    orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+                    orders.add(new Order(SortDirection.get(_sort[1]), _sort[0]));
                 }
             } else {
                 // sort=[field, direction]
-                orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+                orders.add(new Order(SortDirection.get(sort[1]), sort[0]));
             }
 
             List<Application> apps = new ArrayList<Application>();
