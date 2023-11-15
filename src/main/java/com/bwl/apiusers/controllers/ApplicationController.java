@@ -93,7 +93,7 @@ public class ApplicationController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            if(page == 0 && size == 3 && sort[0].equals("id") && sort[1].equals("asc")) {
+            if(page == 0 && size == 2 && sort[0].equals("id") && sort[1].equals("asc")) {
                 Map<String, Object> all = new HashMap<>();
                 all.put("applications", apps);
                 return new ResponseEntity<>(all, HttpStatus.OK);
