@@ -36,15 +36,6 @@ public class ApplicationController {
         this.assembler = assembler;
     }
 
-//    private Sort.Direction getSortDirection(String direction) {
-//        if (direction == null || direction.isEmpty() || direction.equalsIgnoreCase("asc")) {
-//            return Sort.Direction.ASC;
-//        } else if (direction.equalsIgnoreCase("desc")) {
-//            return Sort.Direction.DESC;
-//        } else {
-//            throw new IllegalArgumentException("Invalid sort direction: " + direction);
-//        }
-//    }
 
     @GetMapping("/{id}")
     public EntityModel<Application> one(@PathVariable Integer id) {
@@ -53,12 +44,6 @@ public class ApplicationController {
         return assembler.toModel(app);
     }
 
-//    @GetMapping("/applications")
-//    public CollectionModel<EntityModel<Application>> all() {
-//        List<EntityModel<Application>> applications = repository.findAll().stream()
-//                .map(assembler::toModel).collect(Collectors.toList());
-//        return CollectionModel.of(applications, linkTo(methodOn(ApplicationController.class).all()).withSelfRel());
-//    }
     @GetMapping("")
     public ResponseEntity<Map<String, Object>> all(
             @RequestParam(required = false) String name,
