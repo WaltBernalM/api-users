@@ -23,5 +23,5 @@ public class Profile {
 
     @ManyToOne
     @JoinColumn(name = "ID_APPLICATION", nullable = false)
-    private Integer idApplication;
+    private Application idApplication;
 }
