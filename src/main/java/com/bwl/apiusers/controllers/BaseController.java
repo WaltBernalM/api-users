@@ -2,7 +2,9 @@ package com.bwl.apiusers.controllers;
 
 import com.bwl.apiusers.assemblers.BaseModelAssembler;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
+import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.repositories.BaseRepository;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +24,7 @@ import java.util.Map;
 public abstract class BaseController<T,R extends BaseRepository<T>, M extends BaseModelAssembler<T>> {
     private final R repository;
     private final M assembler;
-
-    private final Class<T> entityClass; // Added to store the class type
+    private final Class<T> entityClass;
 
     public BaseController(R repository, M assembler, Class<T> entityClass) {
         this.repository = repository;
@@ -32,9 +33,15 @@ public abstract class BaseController<T,R extends BaseRepository<T>, M extends Ba
     }
 
     @GetMapping("/{id}")
-    public EntityModel<T> one(@PathVariable Integer id) {
-        T entity = repository.findById(id).orElseThrow( () -> new BaseNotFoundException(entityClass, id));
-        return assembler.toModel(entity);
+    public ResponseEntity<?> one(@PathVariable Integer id) {
+        try {
+            T entity = repository.findById(id).orElseThrow(() -> new BaseNotFoundException(entityClass, id));
+            EntityModel<T> entityModel = assembler.toModel(entity);
+            return ResponseEntity.ok(entityModel);
+        } catch (Exception e) {
+            ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorresponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("")
@@ -83,7 +90,8 @@ public abstract class BaseController<T,R extends BaseRepository<T>, M extends Ba
             response.put("totalPages", entityPage.getTotalPages());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
