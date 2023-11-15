@@ -5,6 +5,7 @@ import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.repositories.BaseRepository;
 import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -74,7 +75,7 @@ public abstract class BaseController<T,R extends BaseRepository<T>, M extends Ba
             entities = entityPage.getContent();
 
             if (entities.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                throw new BaseNotFoundException(entityClass);
             }
 
             if (page == 0 && size == 2 && sort[0].equals("id") && sort[1].equals("asc")) {
@@ -91,6 +92,9 @@ public abstract class BaseController<T,R extends BaseRepository<T>, M extends Ba
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
