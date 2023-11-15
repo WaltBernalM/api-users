@@ -9,9 +9,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class ApplicationModelAssembler implements RepresentationModelAssembler<Application, EntityModel<Application>> {
-    @Override
-    public EntityModel<Application> toModel(Application application) {
-        return EntityModel.of(application);
-    }
+public class ApplicationModelAssembler extends BaseModelAssembler<Application> {
+
 }
