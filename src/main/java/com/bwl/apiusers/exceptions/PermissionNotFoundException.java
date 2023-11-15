@@ -1,7 +1,9 @@
 package com.bwl.apiusers.exceptions;
 
-public class PermissionNotFoundException extends RuntimeException {
+import com.bwl.apiusers.models.Permission;
+
+public class PermissionNotFoundException extends BaseNotFoundException {
     public PermissionNotFoundException(Integer id) {
-        super("Could not find permission " + id);
+        super(Permission.class, id);
     }
 }
