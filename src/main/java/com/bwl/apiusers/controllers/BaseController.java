@@ -49,8 +49,8 @@ public abstract class BaseController<T,R extends BaseRepository<T>, M extends Ba
     public ResponseEntity<?> all (
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size,
-            @RequestParam(defaultValue = "id,desc") String[] sort
+            @RequestParam(defaultValue = "" + Integer.MAX_VALUE) int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort
     ) {
         try {
             List<Sort.Order> orders = new ArrayList<>();
@@ -78,12 +78,11 @@ public abstract class BaseController<T,R extends BaseRepository<T>, M extends Ba
                 throw new BaseNotFoundException(entityClass);
             }
 
-            if (page == 0 && size == 2 && sort[0].equals("id") && sort[1].equals("asc")) {
+            if (page == 0 && size == Integer.MAX_VALUE && sort[0].equals("id") && sort[1].equals("asc")) {
                 Map<String, Object> all = new HashMap<>();
                 all.put("data", entities);
                 return new ResponseEntity<>(all, HttpStatus.OK);
             }
-
             Map<String, Object> response = new HashMap<>();
             response.put("data", entities);
             response.put("currentPage", entityPage.getNumber());
