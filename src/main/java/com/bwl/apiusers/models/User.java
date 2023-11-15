@@ -21,8 +21,8 @@ public class User {
     @Column(name = "Enabled", nullable = false)
     private Boolean enabled;
 
-    @Column(name = "FORCE")
-    private Boolean force;
+    @Column(name = "FORCE_2FA")
+    private Boolean force2FA;
 
     @Column(name = "HASH")
     private String hash;
