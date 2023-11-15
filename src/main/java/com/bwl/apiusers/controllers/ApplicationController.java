@@ -27,73 +27,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/applications")
-public class ApplicationController {
-    private final ApplicationRepository repository;
-    private final ApplicationModelAssembler assembler;
-
+public class ApplicationController extends  BaseController<Application, ApplicationRepository, ApplicationModelAssembler> {
     public ApplicationController(ApplicationRepository repository, ApplicationModelAssembler assembler) {
-        this.repository = repository;
-        this.assembler = assembler;
-    }
-
-
-    @GetMapping("/{id}")
-    public EntityModel<Application> one(@PathVariable Integer id) {
-        Application app = repository.findById(id).orElseThrow(() -> new ApplicationNotFoundException(id));
-
-        return assembler.toModel(app);
-    }
-
-    @GetMapping("")
-    public ResponseEntity<Map<String, Object>> all(
-            @RequestParam(required = false) String name,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort
-    ) {
-        try {
-            List<Order> orders = new ArrayList<Order>();
-
-            if (sort[0].contains(",")) {
-                for (String sortOrder : sort) {
-                    String[] _sort = sortOrder.split(",");
-                    orders.add(new Order(SortDirection.get(_sort[1]), _sort[0]));
-                }
-            } else {
-                // sort=[field, direction]
-                orders.add(new Order(SortDirection.get(sort[1]), sort[0]));
-            }
-
-            List<Application> apps = new ArrayList<Application>();
-            Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
-
-            Page<Application> appTuts;
-            if (name == null)
-                appTuts = repository.findAll(pagingSort);
-            else
-                appTuts = repository.findByNameContaining(name, pagingSort);
-
-            apps = appTuts.getContent();
-
-            if (apps.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            if(page == 0 && size == 2 && sort[0].equals("id") && sort[1].equals("asc")) {
-                Map<String, Object> all = new HashMap<>();
-                all.put("applications", apps);
-                return new ResponseEntity<>(all, HttpStatus.OK);
-            }
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("applications", apps);
-            response.put("currentPage", appTuts.getNumber());
-            response.put("totalItems", appTuts.getTotalElements());
-            response.put("totalPages", appTuts.getTotalPages());
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        super(repository, assembler, Application.class);
     }
 }
