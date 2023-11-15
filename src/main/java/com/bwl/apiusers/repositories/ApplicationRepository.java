@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ApplicationRepository extends JpaRepository<Application, Integer> {
-    Page<Application> findByNameContaining(String name, Pageable pageable);
-    List<Application> findByNameContaining(String name, Sort sort);
+public interface ApplicationRepository extends BaseRepository<Application> {
+//    Page<Application> findByNameContaining(String name, Pageable pageable);
+//    List<Application> findByNameContaining(String name, Sort sort);
 }

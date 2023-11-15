@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PermissionRepository extends JpaRepository<Permission, Integer> {
-    Page<Permission> findByNameContaining(String name, Pageable pageable);
-    List<Permission> findByNameContaining(String name, Sort sort);
+public interface PermissionRepository extends BaseRepository<Permission> {
+    
 }
