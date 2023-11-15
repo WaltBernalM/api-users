@@ -62,7 +62,7 @@ public class ApplicationController {
     public ResponseEntity<Map<String, Object>> all(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "2") int size,
             @RequestParam(defaultValue = "id,asc") String[] sort
     ) {
         try {
