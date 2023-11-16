@@ -1,9 +1,11 @@
 package com.bwl.apiusers.assemblers;
 
 import com.bwl.apiusers.models.Profile;
-import org.springframework.hateoas.EntityModel;
+import com.bwl.apiusers.dtos.ProfileDTO;
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProfileModelAssembler extends BaseModelAssembler<Profile> {
+@Data
+public class ProfileModelAssembler extends DTOModelAssembler<ProfileDTO, Profile> {
 }
