@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/profiles")
-public class ProfileController extends BaseController<Profile, ProfileDTO, ProfileRepository, ProfileModelAssembler> {
+public class ProfileController extends GenericReadController<Profile, ProfileDTO, ProfileRepository, ProfileModelAssembler> {
     ProfileController(ProfileRepository repository, ProfileModelAssembler assembler) {
         super(repository, assembler, Profile.class, ProfileDTO.class);
     }

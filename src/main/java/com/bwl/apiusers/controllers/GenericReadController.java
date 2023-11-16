@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 // Class T represents  the Model, Class D represents the DTO model, R represents Repository and M model assembler
-public abstract class BaseController<T, D, R extends BaseRepository<T>, M extends BaseModelAssembler<T>> {
+public abstract class GenericReadController<T, D, R extends BaseRepository<T>, M extends BaseModelAssembler<T>> {
     @Getter
     private final R repository;
 
@@ -34,7 +34,7 @@ public abstract class BaseController<T, D, R extends BaseRepository<T>, M extend
     private final Class<T> entityClass;
     private final Class<D> dtoEntityClass;
 
-    public BaseController(R repository, M assembler, Class<T> entityClass, Class<D> dtoEntityClass) {
+    public GenericReadController(R repository, M assembler, Class<T> entityClass, Class<D> dtoEntityClass) {
         this.repository = repository;
         this.assembler = assembler;
         this.entityClass = entityClass;

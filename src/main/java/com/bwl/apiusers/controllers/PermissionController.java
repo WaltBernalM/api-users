@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/permissions")
-public class PermissionController  extends BaseController<Permission, DTO, PermissionRepository, PermissionModelAssembler>{
+public class PermissionController  extends GenericReadController<Permission, DTO, PermissionRepository, PermissionModelAssembler> {
     public PermissionController(PermissionRepository repository, PermissionModelAssembler assembler) {
         super(repository, assembler, Permission.class, DTO.class);
     }

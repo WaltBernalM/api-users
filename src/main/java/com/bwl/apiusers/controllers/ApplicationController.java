@@ -10,7 +10,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping("/api/applications")
-public class ApplicationController extends  BaseController<Application, DTO, ApplicationRepository, ApplicationModelAssembler> {
+public class ApplicationController extends GenericReadController<Application, DTO, ApplicationRepository, ApplicationModelAssembler> {
     public ApplicationController(ApplicationRepository repository, ApplicationModelAssembler assembler) {
         super(repository, assembler, Application.class, DTO.class);
     }

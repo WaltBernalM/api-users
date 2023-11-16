@@ -1,19 +1,13 @@
 package com.bwl.apiusers.controllers;
 
-import com.bwl.apiusers.assemblers.ProfileModelAssembler;
 import com.bwl.apiusers.assemblers.UserModelAssembler;
 import com.bwl.apiusers.dtos.NewUserDTO;
-import com.bwl.apiusers.dtos.ProfileDTO;
 import com.bwl.apiusers.dtos.UserDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.models.*;
 import com.bwl.apiusers.repositories.*;
 import com.bwl.apiusers.utils.Utils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +18,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("api/users")
-public class UserController extends BaseController<User, UserDTO, UserRepository, UserModelAssembler> {
+public class UserController extends GenericReadController<User, UserDTO, UserRepository, UserModelAssembler> {
     private final NewUserDTO newUserDTO;
     private final UserDTO userDTO;
     private final UserRepository userRepository;
