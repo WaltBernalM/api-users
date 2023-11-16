@@ -4,12 +4,13 @@ import com.bwl.apiusers.assemblers.BaseModelAssembler;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.repositories.BaseRepository;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bwl.apiusers.utils.Utils;
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +23,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseController<T,R extends BaseRepository<T>, M extends BaseModelAssembler<T>> {
+// Class T represents  the Model, Class D represents the DTO model, R represents Repository and M model assembler
+public abstract class BaseController<T, D, R extends BaseRepository<T>, M extends BaseModelAssembler<T>> {
+    @Getter
     private final R repository;
-    private final M assembler;
-    private final Class<T> entityClass;
 
-    public BaseController(R repository, M assembler, Class<T> entityClass) {
+    @Getter
+    private final M assembler;
+
+    private final Class<T> entityClass;
+    private final Class<D> dtoEntityClass;
+
+    public BaseController(R repository, M assembler, Class<T> entityClass, Class<D> dtoEntityClass) {
         this.repository = repository;
         this.assembler = assembler;
         this.entityClass = entityClass;
+        this.dtoEntityClass = dtoEntityClass;
     }
 
     @GetMapping("/{id}")
@@ -53,38 +61,41 @@ public abstract class BaseController<T,R extends BaseRepository<T>, M extends Ba
             @RequestParam(defaultValue = "id,asc") String[] sort
     ) {
         try {
-            List<Sort.Order> orders = new ArrayList<>();
+            // Declaration of an empty list of Order
+            List<Order> orders = new ArrayList<>();
 
-            if(sort[0].contains(",")) {
-                for(String sortOrder : sort) {
-                    String[] _sort = sortOrder.split(",");
-                    orders.add(new Sort.Order(Sort.Direction.fromString(_sort[1]), sort[0]));
-                }
-            } else {
-                orders.add(new Sort.Order(Sort.Direction.fromString(sort[1]), sort[0]));
-            }
+            // Decomposition of the ?sort= query param and assignation of type Order to orders List
+            getSortOrder(sort, orders);
+
+            // Declaration of entity new list of type T
             List<T> entities = new ArrayList<>();
+
+            // Declaration of paging sort by default or user query inputs
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
-            Page<T> entityPage;
-            if(name == null) {
-                entityPage = repository.findAll(pagingSort);
-            } else {
-                entityPage = repository.findByNameContaining(name, pagingSort);
-            }
+            // Declaration of pages for repository results by paging sort
+            Page<T> entityPage = generateEntityPage(name, pagingSort);
+
+            // Assignation of entityPage (result of repository) to entities List with T parameters
             entities = entityPage.getContent();
 
+            // Throw exception if the entities List is empty
             if (entities.isEmpty()) {
                 throw new BaseNotFoundException(entityClass);
             }
 
-            if (page == 0 && size == Integer.MAX_VALUE && sort[0].equals("id") && sort[1].equals("asc")) {
-                Map<String, Object> all = new HashMap<>();
-                all.put("data", entities);
-                return new ResponseEntity<>(all, HttpStatus.OK);
+            // Initialization of response content
+            Map<String, Object>  response = new HashMap<>();
+
+            // conditional Model and DTO parsing
+            parseResponseData(entities, response);
+
+            // If no size declared return full list
+            if (size == Integer.MAX_VALUE) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
-            Map<String, Object> response = new HashMap<>();
-            response.put("data", entities);
+
+            // Body response construction as Map
             response.put("currentPage", entityPage.getNumber());
             response.put("totalItems", entityPage.getTotalElements());
             response.put("totalPages", entityPage.getTotalPages());
@@ -95,6 +106,39 @@ public abstract class BaseController<T,R extends BaseRepository<T>, M extends Ba
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private Page<T> generateEntityPage(String name, Pageable pagingSort) {
+        Page<T> entityPage;
+        if(name == null) {
+            return entityPage = repository.findAll(pagingSort);
+        } else {
+            return entityPage = repository.findByNameContaining(name, pagingSort);
+        }
+    }
+
+    private void parseResponseData(List<T> entities, Map<String, Object> response) {
+        if(dtoEntityClass.isInterface()) {
+            response.put("data", entities);
+        } else {
+            List<D> dtoEntities = new ArrayList<>();
+            for(T ent : entities) {
+                D dto = Utils.convertToDTO(ent, dtoEntityClass);
+                dtoEntities.add(dto);
+            }
+            response.put("data", dtoEntities);
+        }
+    }
+
+    private void getSortOrder(String[] sort, List<Order> orders) {
+        if(sort[0].contains(",")) {
+            for(String sortOrder : sort) {
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Order(Utils.getSortDirection(_sort[1]), sort[0]));
+            }
+        } else {
+            orders.add(new Order(Utils.getSortDirection(sort[1]), sort[0]));
         }
     }
 }
