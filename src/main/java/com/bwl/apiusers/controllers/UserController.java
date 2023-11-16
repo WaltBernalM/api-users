@@ -1,11 +1,20 @@
 package com.bwl.apiusers.controllers;
 
+import com.bwl.apiusers.assemblers.ProfileModelAssembler;
 import com.bwl.apiusers.assemblers.UserModelAssembler;
 import com.bwl.apiusers.dtos.NewUserDTO;
+import com.bwl.apiusers.dtos.ProfileDTO;
+import com.bwl.apiusers.dtos.UserDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.models.*;
 import com.bwl.apiusers.repositories.*;
+import com.bwl.apiusers.utils.Utils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +24,9 @@ import java.util.*;
 
 @RestController
 @RequestMapping("api/users")
-public class UserController {
+public class UserController extends BaseController<User, UserDTO, UserRepository, UserModelAssembler> {
     private final NewUserDTO newUserDTO;
+    private final UserDTO userDTO;
     private final UserRepository userRepository;
     private final UserModelAssembler assembler;
     private final ProfileRepository profileRepository;
@@ -25,14 +35,17 @@ public class UserController {
     private  final UserApplicationRepository userApplicationRepository;
 
     public UserController(
-            NewUserDTO newUserDTO,
-            UserRepository userRepository,
-            UserModelAssembler assembler,
             ProfileRepository profileRepository,
+            UserModelAssembler assembler,
+            NewUserDTO newUserDTO,
+            UserDTO userDTO,
+            UserRepository userRepository,
             ApplicationRepository applicationRepository,
             UserProfileRepository userProfileRepository,
             UserApplicationRepository userApplicationRepository) {
+        super(userRepository, assembler, User.class, UserDTO.class);
         this.newUserDTO = newUserDTO;
+        this.userDTO = userDTO;
         this.userRepository = userRepository;
         this.assembler = assembler;
         this.profileRepository = profileRepository;
@@ -83,6 +96,23 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<?> one(@PathVariable Integer id) {
+        try {
+            User user = getRepository().findById(id).orElseThrow(() -> new BaseNotFoundException(Profile.class, id));
+
+            UserDTO dto = Utils.convertToDTO(user, UserDTO.class);
+
+            EntityModel<UserDTO> entityModel = getAssembler().toModel(dto);
+
+            return ResponseEntity.ok(entityModel);
+        } catch (Exception e) {
+            ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorresponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private User parseToUser(NewUserDTO newUserDTO) {
         String userPassword = newUserDTO.getPassword();
         String passwordHash = new BCryptPasswordEncoder().encode(userPassword);
@@ -109,6 +139,7 @@ public class UserController {
         return newUser;
     }
 
+    // Method to add New UserProfile row
     private UserProfile addNewUserProfileRow(User user, Profile profile) {
         UserProfile userProfile = new UserProfile();
         userProfile.setIdUser(user);
@@ -116,6 +147,7 @@ public class UserController {
         return userProfileRepository.save(userProfile);
     }
 
+    // Method to add New UserApplication row
     private UserApplication addNewUserApplicationRow(User user, Application application) {
         UserApplication userApplication = new UserApplication();
         userApplication.setIdUser(user);
