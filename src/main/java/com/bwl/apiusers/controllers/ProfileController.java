@@ -24,11 +24,8 @@ public class ProfileController extends BaseController<Profile, ProfileDTO, Profi
     public ResponseEntity<?> one(@PathVariable Integer id) {
         try {
             Profile profile = getRepository().findById(id).orElseThrow(() -> new BaseNotFoundException(Profile.class, id));
-
             ProfileDTO dto = Utils.convertToDTO(profile, ProfileDTO.class);
-
             EntityModel<ProfileDTO> entityModel = getAssembler().toModel(dto);
-
             return ResponseEntity.ok(entityModel);
         } catch (Exception e) {
             ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
