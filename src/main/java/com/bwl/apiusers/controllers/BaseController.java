@@ -65,7 +65,14 @@ public abstract class BaseController<T, D, R extends BaseRepository<T>, M extend
             List<Order> orders = new ArrayList<>();
 
             // Decomposition of the ?sort= query param and assignation of type Order to orders List
-            getSortOrder(sort, orders);
+            if(sort[0].contains(",")) {
+                for(String sortOrder : sort) {
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Order(Utils.getSortDirection(_sort[1]), sort[0]));
+                }
+            } else {
+                orders.add(new Order(Utils.getSortDirection(sort[1]), sort[0]));
+            }
 
             // Declaration of entity new list of type T
             List<T> entities = new ArrayList<>();
@@ -74,7 +81,7 @@ public abstract class BaseController<T, D, R extends BaseRepository<T>, M extend
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
 
             // Declaration of pages for repository results by paging sort
-            Page<T> entityPage = generateEntityPage(name, pagingSort);
+            Page<T> entityPage = Utils.generateEntityPage(name, pagingSort, repository);
 
             // Assignation of entityPage (result of repository) to entities List with T parameters
             entities = entityPage.getContent();
@@ -87,11 +94,11 @@ public abstract class BaseController<T, D, R extends BaseRepository<T>, M extend
             // Initialization of response content
             Map<String, Object>  response = new HashMap<>();
 
-            // conditional Model and DTO parsing
-            parseResponseData(entities, response);
+            // conditional DTO parsing
+            Utils.parseResponseData(entities, dtoEntityClass, response);
 
-            // If no size declared return full list
-            if (size == Integer.MAX_VALUE) {
+            // If all query params are as default, return full list
+            if (page == 0 && size == Integer.MAX_VALUE && sort[0].equals("id") && sort[1].equals("asc")) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
 
@@ -106,39 +113,6 @@ public abstract class BaseController<T, D, R extends BaseRepository<T>, M extend
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private Page<T> generateEntityPage(String name, Pageable pagingSort) {
-        Page<T> entityPage;
-        if(name == null) {
-            return entityPage = repository.findAll(pagingSort);
-        } else {
-            return entityPage = repository.findByNameContaining(name, pagingSort);
-        }
-    }
-
-    private void parseResponseData(List<T> entities, Map<String, Object> response) {
-        if(dtoEntityClass.isInterface()) {
-            response.put("data", entities);
-        } else {
-            List<D> dtoEntities = new ArrayList<>();
-            for(T ent : entities) {
-                D dto = Utils.convertToDTO(ent, dtoEntityClass);
-                dtoEntities.add(dto);
-            }
-            response.put("data", dtoEntities);
-        }
-    }
-
-    private void getSortOrder(String[] sort, List<Order> orders) {
-        if(sort[0].contains(",")) {
-            for(String sortOrder : sort) {
-                String[] _sort = sortOrder.split(",");
-                orders.add(new Order(Utils.getSortDirection(_sort[1]), sort[0]));
-            }
-        } else {
-            orders.add(new Order(Utils.getSortDirection(sort[1]), sort[0]));
         }
     }
 }
