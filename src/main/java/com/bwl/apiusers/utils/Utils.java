@@ -1,8 +1,14 @@
 package com.bwl.apiusers.utils;
 
+import com.bwl.apiusers.repositories.BaseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Utils {
     public static Sort.Direction getSortDirection(String direction) {
@@ -12,6 +18,27 @@ public class Utils {
             return Sort.Direction.DESC;
         } else {
             throw new IllegalArgumentException("Invalid sort direction: " + direction);
+        }
+    }
+
+    public static <T, R extends BaseRepository<T>> Page<T> generateEntityPage(String name, Pageable pagingSort, R repository) {
+        Page<T> entityPage;
+        if(name == null) {
+            return entityPage = repository.findAll(pagingSort);
+        }
+        return entityPage = repository.findByNameContaining(name, pagingSort);
+    }
+
+    public static <D, T> void parseResponseData(List<T> entities, Class<D> dtoEntityClass, Map<String, Object> response) {
+        if(dtoEntityClass.isInterface()) {
+            response.put("data", entities);
+        } else {
+            List<D> dtoEntities = new ArrayList<>();
+            for (T ent : entities) {
+                D dto = Utils.convertToDTO(ent, dtoEntityClass);
+                dtoEntities.add(dto);
+            }
+            response.put("data", dtoEntities);
         }
     }
 
