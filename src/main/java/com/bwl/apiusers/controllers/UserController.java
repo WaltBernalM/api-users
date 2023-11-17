@@ -14,16 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/users")
 public class UserController extends GenericReadController<User, UserDTO, UserRepository, UserModelAssembler> {
-//    private final NewUserDTO newUserDTO;
-//    private final UserDTO userDTO;
     private final UserRepository userRepository;
     private final UserModelAssembler assembler;
     private final ProfileRepository profileRepository;
@@ -34,15 +30,11 @@ public class UserController extends GenericReadController<User, UserDTO, UserRep
     public UserController(
             ProfileRepository profileRepository,
             UserModelAssembler assembler,
-//            NewUserDTO newUserDTO,
-//            UserDTO userDTO,
             UserRepository userRepository,
             ApplicationRepository applicationRepository,
             UserProfileRepository userProfileRepository,
             UserApplicationRepository userApplicationRepository) {
         super(userRepository, assembler, User.class, UserDTO.class);
-//        this.newUserDTO = newUserDTO;
-//        this.userDTO = userDTO;
         this.userRepository = userRepository;
         this.assembler = assembler;
         this.profileRepository = profileRepository;
