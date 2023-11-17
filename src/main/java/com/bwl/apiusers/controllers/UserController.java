@@ -17,12 +17,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/users")
 public class UserController extends GenericReadController<User, UserDTO, UserRepository, UserModelAssembler> {
-    private final NewUserDTO newUserDTO;
-    private final UserDTO userDTO;
+//    private final NewUserDTO newUserDTO;
+//    private final UserDTO userDTO;
     private final UserRepository userRepository;
     private final UserModelAssembler assembler;
     private final ProfileRepository profileRepository;
@@ -33,15 +34,15 @@ public class UserController extends GenericReadController<User, UserDTO, UserRep
     public UserController(
             ProfileRepository profileRepository,
             UserModelAssembler assembler,
-            NewUserDTO newUserDTO,
-            UserDTO userDTO,
+//            NewUserDTO newUserDTO,
+//            UserDTO userDTO,
             UserRepository userRepository,
             ApplicationRepository applicationRepository,
             UserProfileRepository userProfileRepository,
             UserApplicationRepository userApplicationRepository) {
         super(userRepository, assembler, User.class, UserDTO.class);
-        this.newUserDTO = newUserDTO;
-        this.userDTO = userDTO;
+//        this.newUserDTO = newUserDTO;
+//        this.userDTO = userDTO;
         this.userRepository = userRepository;
         this.assembler = assembler;
         this.profileRepository = profileRepository;
@@ -110,17 +111,9 @@ public class UserController extends GenericReadController<User, UserDTO, UserRep
     @PatchMapping("/{id}/update")
     public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UpdateUserDTO updateUserDTO) {
         try {
-            // Verify the ProfileId array passed in body
-            Optional<Integer[]> userProfilesToUpdate = Optional.ofNullable(updateUserDTO.getIdProfiles());
-            if (userProfilesToUpdate.isPresent()) {
-                for (Integer profileId : userProfilesToUpdate.get()) {
-                    profileRepository.findById(profileId)
-                            .orElseThrow(
-                                    () -> new BaseNotFoundException(
-                                            Profile.class, "provided id: " + profileId + " not found in database")
-                            );
-                }
-            }
+            // Verify if User id exists in db
+            User userInDb = userRepository.findById(id)
+                    .orElseThrow(() -> new BaseNotFoundException(User.class, "id not found in database"));
 
             // Verify if userName is already taken
             String updateUserDTOUserName = updateUserDTO.getUserName();
@@ -132,29 +125,117 @@ public class UserController extends GenericReadController<User, UserDTO, UserRep
                 }
             }
 
-            Map<String, Object> body = new HashMap<>();
+            // Verify the ProfileId array passed in body
+            boolean updateProfiles = false;
+            Optional<Integer[]> userProfilesToUpdate = Optional.ofNullable(updateUserDTO.getIdProfiles());
+            List<Profile> profilesToSet = new ArrayList<>();
+            if (userProfilesToUpdate.isPresent()) {
+                for (Integer profileId : userProfilesToUpdate.get()) {
+                    Profile profile = profileRepository.findById(profileId)
+                            .orElseThrow(
+                                    () -> new BaseNotFoundException(
+                                            Profile.class, "provided id: " + profileId + " not found in database")
+                            );
+                    updateProfiles = true;
+                    profilesToSet.add(profile);
+                }
+            }
 
-            User userInDb = userRepository.findById(id).orElseThrow(() -> new BaseNotFoundException(User.class, "id not found in database"));
+            Map<String, Object> body = new HashMap<>();
+//            body.put("updateProfiles", updateProfiles);
+
+            // Update UserProfile table for new fields in idProfiles
+            if (updateProfiles) {
+                // Block to delete the currentUserProfiles
+                List<UserProfile> currentUserProfiles = userProfileRepository.findAllByIdUser(userInDb);
+                List<Integer> currentUserProfileIds = currentUserProfiles.stream()
+                        .map(UserProfile::getId)
+                        .toList();
+//                body.put("currentUserProfileIds", currentUserProfileIds);
+                for(Integer userProfileId : currentUserProfileIds) {
+                    userProfileRepository.deleteById(userProfileId);
+                }
+
+                // Block to update the new UserProfiles
+                for (Profile profileToSet: profilesToSet) {
+                    UserProfile newUserProfile = new UserProfile();
+                    newUserProfile.setIdProfile(profileToSet);
+                    newUserProfile.setIdUser(userInDb);
+                    userProfileRepository.save(newUserProfile);
+                }
+                List<UserProfile> updatedUserProfiles = userProfileRepository.findAllByIdUser(userInDb);
+                List<Integer> updatedUserProfilesIds = updatedUserProfiles.stream()
+                        .map(UserProfile::getId)
+                        .toList();
+//                body.put("updatedUserProfilesIds", updatedUserProfilesIds);
+            }
 
             UserDTO currentUserData = Utils.convertToDTO(userInDb, UserDTO.class);
-            body.put("currentUserData", currentUserData);
+//            body.put("currentUserData", currentUserData);
 
-            // reverse convertToDTO
+            // Update of userInDb values as of updateUserDTO
             for (Field field : updateUserDTO.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 Object value = field.get(updateUserDTO);
-                System.out.println("Field: " + field.getName() + ", Value: " + value);
+                if (value != null && !field.getName().equals("idProfiles")) {
+                    Field userField = User.class.getDeclaredField(field.getName());
+                    userField.setAccessible(true);
+                    userField.set(userInDb, value);
+                }
             }
+            User updatedUser = userRepository.save(userInDb);
+
+            UserDTO updatedUserData = Utils.convertToDTO(updatedUser, UserDTO.class);
+            body.put("user", updatedUserData);
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", body);
 
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+        try {
+            User userToDelete = userRepository.findById(id)
+                    .orElseThrow(() -> new BaseNotFoundException(User.class, "id was not found in database"));
+
+            // Delete UserProfiles related to User
+            List<UserProfile> currentUserProfiles = userProfileRepository.findAllByIdUser(userToDelete);
+            List<Integer> currentUserProfileIds = currentUserProfiles.stream()
+                    .map(UserProfile::getId)
+                    .toList();
+            for(Integer userProfileId : currentUserProfileIds) {
+                userProfileRepository.deleteById(userProfileId);
+            }
+
+            // Delete UserApplications related to User
+            List<UserApplication> currentUserApplications = userApplicationRepository.findAllByIdUser(userToDelete);
+            List<Integer> currentUserApplicationsIds = currentUserApplications.stream()
+                    .map(UserApplication::getId)
+                    .toList();
+            for(Integer userApplicationId : currentUserApplicationsIds) {
+                userApplicationRepository.deleteById(userApplicationId);
+            }
+
+            userRepository.deleteById(id);
+
+            Map<String, Object> body = new HashMap<>();
+            UserDTO userDeleted = Utils.convertToDTO(userToDelete, UserDTO.class);
+            body.put("user", userDeleted);
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", body);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        } catch(Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     private User parseToUser(NewUserDTO newUserDTO) {
         String userPassword = newUserDTO.getPassword();
