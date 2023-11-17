@@ -1,8 +1,10 @@
 package com.bwl.apiusers.services;
 
 import com.bwl.apiusers.assemblers.BaseModelAssembler;
+import com.bwl.apiusers.dtos.ProfileDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
+import com.bwl.apiusers.models.Profile;
 import com.bwl.apiusers.repositories.BaseRepository;
 import com.bwl.apiusers.utils.Utils;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class GenericReadService <T, D, R extends BaseRepository<T>, M extends Ba
         this.dtoEntityClass = dtoEntityClass;
     }
 
-    public final ResponseEntity<?> one( Integer id) {
+    public ResponseEntity<?> one( Integer id) {
         try {
             T entity = repository.findById(id).orElseThrow(() -> new BaseNotFoundException(entityClass, id));
             EntityModel<T> entityModel = assembler.toModel(entity);
@@ -49,7 +52,7 @@ public class GenericReadService <T, D, R extends BaseRepository<T>, M extends Ba
         }
     }
 
-    public final ResponseEntity<?> all (
+    public ResponseEntity<?> all (
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "" + Integer.MAX_VALUE) int size,
