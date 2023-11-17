@@ -1,10 +1,8 @@
 package com.bwl.apiusers.services;
 
 import com.bwl.apiusers.assemblers.BaseModelAssembler;
-import com.bwl.apiusers.dtos.ProfileDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
-import com.bwl.apiusers.models.Profile;
 import com.bwl.apiusers.repositories.BaseRepository;
 import com.bwl.apiusers.utils.Utils;
 import lombok.Getter;
@@ -15,8 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;

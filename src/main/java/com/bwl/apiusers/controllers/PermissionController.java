@@ -1,10 +1,5 @@
 package com.bwl.apiusers.controllers;
 
-import com.bwl.apiusers.assemblers.PermissionModelAssembler;
-import com.bwl.apiusers.dtos.DTO;
-import com.bwl.apiusers.models.Permission;
-import com.bwl.apiusers.repositories.PermissionRepository;
-import com.bwl.apiusers.services.ApplicationService;
 import com.bwl.apiusers.services.PermissionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
