@@ -59,7 +59,7 @@ public class Utils {
         }
     }
 
-    private static Field findMatchingField(Class<?> clazz, String fieldName) {
+    public static Field findMatchingField(Class<?> clazz, String fieldName) {
         for (Field field : clazz.getDeclaredFields()) {
             if (field.getName().equals(fieldName)) {
                 return field;
