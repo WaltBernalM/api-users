@@ -2,6 +2,7 @@ package com.bwl.apiusers.controllers;
 
 import com.bwl.apiusers.assemblers.UserModelAssembler;
 import com.bwl.apiusers.dtos.NewUserDTO;
+import com.bwl.apiusers.dtos.UpdateUserDTO;
 import com.bwl.apiusers.dtos.UserDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 @RestController
@@ -51,8 +53,8 @@ public class UserController extends GenericReadController<User, UserDTO, UserRep
     @PostMapping("/signup")
     public ResponseEntity<?> newUserSignup(@RequestBody NewUserDTO newUserDTO) {
         try {
-            String newUserDTOEmail = newUserDTO.getEmail();
-            Optional<User> userInDb = userRepository.findOneByEmail(newUserDTOEmail);
+            String newUserDTOUserName = newUserDTO.getUserName();
+            Optional<User> userInDb = userRepository.findOneByEmail(newUserDTOUserName);
 
             Integer profileId = newUserDTO.getProfileId();
             Optional<Profile> profileInDb = profileRepository.findById(profileId);
@@ -95,15 +97,62 @@ public class UserController extends GenericReadController<User, UserDTO, UserRep
     public ResponseEntity<?> one(@PathVariable Integer id) {
         try {
             User user = getRepository().findById(id).orElseThrow(() -> new BaseNotFoundException(Profile.class, id));
-
             UserDTO dto = Utils.convertToDTO(user, UserDTO.class);
-
-            EntityModel<UserDTO> entityModel = getAssembler().toModel(dto);
+            EntityModel<UserDTO> entityModel = assembler.toModel(dto);
 
             return ResponseEntity.ok(entityModel);
         } catch (Exception e) {
             ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
             return new ResponseEntity<>(errorresponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping("/{id}/update")
+    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UpdateUserDTO updateUserDTO) {
+        try {
+            // Verify the ProfileId array passed in body
+            Optional<Integer[]> userProfilesToUpdate = Optional.ofNullable(updateUserDTO.getIdProfiles());
+            if (userProfilesToUpdate.isPresent()) {
+                for (Integer profileId : userProfilesToUpdate.get()) {
+                    profileRepository.findById(profileId)
+                            .orElseThrow(
+                                    () -> new BaseNotFoundException(
+                                            Profile.class, "provided id: " + profileId + " not found in database")
+                            );
+                }
+            }
+
+            // Verify if userName is already taken
+            String updateUserDTOUserName = updateUserDTO.getUserName();
+            List<User> usernamesInDb = userRepository.findAllByUserName(updateUserDTOUserName);
+            if (!usernamesInDb.isEmpty()) {
+                User first = usernamesInDb.get(0);
+                if (!Objects.equals(first.getId(), id)) {
+                    throw new BaseNotFoundException(User.class, "username is already taken");
+                }
+            }
+
+            Map<String, Object> body = new HashMap<>();
+
+            User userInDb = userRepository.findById(id).orElseThrow(() -> new BaseNotFoundException(User.class, "id not found in database"));
+
+            UserDTO currentUserData = Utils.convertToDTO(userInDb, UserDTO.class);
+            body.put("currentUserData", currentUserData);
+
+            // reverse convertToDTO
+            for (Field field : updateUserDTO.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value = field.get(updateUserDTO);
+                System.out.println("Field: " + field.getName() + ", Value: " + value);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", body);
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch(Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
 
