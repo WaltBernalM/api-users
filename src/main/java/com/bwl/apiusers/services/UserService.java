@@ -13,12 +13,14 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
+@Service
 public class UserService extends GenericReadService<User, UserDTO, UserRepository, UserModelAssembler> {
     private final UserRepository userRepository;
     private final UserModelAssembler assembler;
@@ -46,7 +48,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
     public ResponseEntity<?> newUserSignup(@RequestBody NewUserDTO newUserDTO) {
         try {
             String newUserDTOUserName = newUserDTO.getUserName();
-            Optional<User> userInDb = userRepository.findOneByEmail(newUserDTOUserName);
+            Optional<User> userInDb = userRepository.findOneByUserName(newUserDTOUserName);
 
             Integer profileId = newUserDTO.getProfileId();
             Optional<Profile> profileInDb = profileRepository.findById(profileId);
@@ -76,7 +78,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
                 response.put("data", body);
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
             }
-            throw new BaseNotFoundException(User.class, "email already exists in database");
+            throw new BaseNotFoundException(User.class, "UserName already exists in database");
 
         } catch(Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
