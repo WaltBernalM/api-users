@@ -1,9 +1,15 @@
 package com.bwl.apiusers.utils;
 
+import com.bwl.apiusers.models.Profile;
+import com.bwl.apiusers.models.User;
+import com.bwl.apiusers.models.UserComposedModel;
+import com.bwl.apiusers.models.UserProfile;
 import com.bwl.apiusers.repositories.BaseRepository;
+import com.bwl.apiusers.repositories.UserComposedRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -66,5 +72,15 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    public static <T extends UserComposedModel, R extends UserComposedRepository<T>> void deleteUserComposedEntities(R repository, User userToDelete) {
+        List<T> currentUserEntities = repository.findAllByIdUser(userToDelete);
+        List<Integer> currentUserEntityIds = currentUserEntities.stream()
+                .map(UserComposedModel::getId)
+                .toList();
+        for (Integer userEntityId : currentUserEntityIds) {
+            repository.deleteById(userEntityId);
+        }
     }
 }
