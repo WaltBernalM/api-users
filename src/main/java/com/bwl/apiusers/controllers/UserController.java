@@ -139,14 +139,7 @@ public class UserController extends GenericReadController<User, UserDTO, UserRep
             // Update UserProfile table for new fields in idProfiles
             if (updateProfiles) {
                 // Block to delete the currentUserProfiles
-                List<UserProfile> currentUserProfiles = userProfileRepository.findAllByIdUser(userInDb);
-                List<Integer> currentUserProfileIds = currentUserProfiles.stream()
-                        .map(UserProfile::getId)
-                        .toList();
-//                body.put("currentUserProfileIds", currentUserProfileIds);
-                for(Integer userProfileId : currentUserProfileIds) {
-                    userProfileRepository.deleteById(userProfileId);
-                }
+                Utils.deleteUserComposedEntities(userProfileRepository, userInDb);
 
                 // Block to update the new UserProfiles
                 for (Profile profileToSet: profilesToSet) {
@@ -197,22 +190,10 @@ public class UserController extends GenericReadController<User, UserDTO, UserRep
                     .orElseThrow(() -> new BaseNotFoundException(User.class, "id was not found in database"));
 
             // Delete UserProfiles related to User
-            List<UserProfile> currentUserProfiles = userProfileRepository.findAllByIdUser(userToDelete);
-            List<Integer> currentUserProfileIds = currentUserProfiles.stream()
-                    .map(UserProfile::getId)
-                    .toList();
-            for(Integer userProfileId : currentUserProfileIds) {
-                userProfileRepository.deleteById(userProfileId);
-            }
+            Utils.deleteUserComposedEntities(userProfileRepository, userToDelete);
 
             // Delete UserApplications related to User
-            List<UserApplication> currentUserApplications = userApplicationRepository.findAllByIdUser(userToDelete);
-            List<Integer> currentUserApplicationsIds = currentUserApplications.stream()
-                    .map(UserApplication::getId)
-                    .toList();
-            for(Integer userApplicationId : currentUserApplicationsIds) {
-                userApplicationRepository.deleteById(userApplicationId);
-            }
+            Utils.deleteUserComposedEntities(userApplicationRepository, userToDelete);
 
             userRepository.deleteById(id);
 
