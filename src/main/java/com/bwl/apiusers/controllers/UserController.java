@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/users")
-public class UserController1 implements GenericCRUDController<NewUserDTO, UpdateUserDTO> {
+public class UserController implements GenericCRUDController<NewUserDTO, UpdateUserDTO> {
     private final UserService service;
 
-    public UserController1(UserService service) {
+    public UserController(UserService service) {
         this.service = service;
     }
 
