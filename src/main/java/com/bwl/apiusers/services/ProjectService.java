@@ -14,6 +14,7 @@ import com.bwl.apiusers.repositories.ApplicationRepository;
 import com.bwl.apiusers.repositories.ClientRepository;
 import com.bwl.apiusers.repositories.ProjectRepository;
 import com.bwl.apiusers.utils.Utils;
+import jdk.jshell.execution.Util;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,17 +57,11 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
 
             // Verify if id of client exists
             Integer clientId = newProjectDTO.getIdClient();
-            Optional<Client> clientInDb = clientRepository.findById(clientId);
-            if(clientInDb.isEmpty()) {
-                throw new BaseNotFoundException(Client.class, "provided id not found in database");
-            }
+            Optional<Client> clientInDb = Utils.verifyExistence(clientId, clientRepository, Client.class);
 
             // verify if id of application exists
             Integer applicationId = newProjectDTO.getIdApplication();
-            Optional<Application> applicationInDb = applicationRepository.findById(applicationId);
-            if (applicationInDb.isEmpty()) {
-                throw new BaseNotFoundException(Application.class, "provided id not found in database");
-            }
+            Optional<Application> applicationInDb = Utils.verifyExistence(applicationId, applicationRepository, Application.class);
 
             if (projectInDB.isEmpty()) {
                 Project newProject = parseToProject(newProjectDTO, clientInDb.get());

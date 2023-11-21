@@ -51,16 +51,10 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             Optional<User> userInDb = userRepository.findOneByUserName(newUserDTOUserName);
 
             Integer profileId = newUserDTO.getProfileId();
-            Optional<Profile> profileInDb = profileRepository.findById(profileId);
-            if (profileInDb.isEmpty()) {
-                throw new BaseNotFoundException(Profile.class, "provided id not found in database");
-            }
+            Optional<Profile> profileInDb = Utils.verifyExistence(profileId, profileRepository, Profile.class);
 
             Integer applicationId = newUserDTO.getApplicationId();
-            Optional<Application> applicationInDb = applicationRepository.findById(applicationId);
-            if (applicationInDb.isEmpty()) {
-                throw new BaseNotFoundException(Application.class, "provided id not found in database");
-            }
+            Optional<Application> applicationInDb = Utils.verifyExistence(applicationId, applicationRepository, Application.class);
 
             if (userInDb.isEmpty()) {
                 User newUser = parseToUser(newUserDTO);
@@ -89,7 +83,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
     @Override
     public ResponseEntity<?> one(@PathVariable Integer id) {
         try {
-            User user = getRepository().findById(id).orElseThrow(() -> new BaseNotFoundException(User.class, id));
+            User user = userRepository.findById(id).orElseThrow(() -> new BaseNotFoundException(User.class, id));
             UserDTO dto = Utils.convertToDTO(user, UserDTO.class);
             EntityModel<UserDTO> entityModel = assembler.toModel(dto);
 
@@ -122,11 +116,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             List<Profile> profilesToSet = new ArrayList<>();
             if (userProfilesToUpdate.isPresent()) {
                 for (Integer profileId : userProfilesToUpdate.get()) {
-                    Profile profile = profileRepository.findById(profileId)
-                            .orElseThrow(
-                                    () -> new BaseNotFoundException(
-                                            Profile.class, "provided id: " + profileId + " not found in database")
-                            );
+                    Profile profile = Utils.verifyExistence(profileId, profileRepository, Profile.class).get();
                     updateProfiles = true;
                     profilesToSet.add(profile);
                 }
