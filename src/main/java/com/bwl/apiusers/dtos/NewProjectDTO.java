@@ -1,5 +1,6 @@
 package com.bwl.apiusers.dtos;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -10,4 +11,5 @@ public class NewProjectDTO implements DTO {
     private String keycode;
     private String description;
     private Integer idClient;
+    private Integer idApplication;
 }
