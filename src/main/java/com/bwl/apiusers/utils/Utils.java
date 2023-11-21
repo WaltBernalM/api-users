@@ -1,5 +1,6 @@
 package com.bwl.apiusers.utils;
 
+import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.models.Profile;
 import com.bwl.apiusers.models.User;
 import com.bwl.apiusers.models.UserComposedModel;
@@ -15,6 +16,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Utils {
     public static Sort.Direction getSortDirection(String direction) {
@@ -82,5 +84,13 @@ public class Utils {
         for (Integer userEntityId : currentUserEntityIds) {
             repository.deleteById(userEntityId);
         }
+    }
+
+    public static <T, R extends BaseRepository<T>> Optional<T> verifyExistence(Integer id, R repository, Class<T> entityClass) {
+        Optional<T> entityInDb = repository.findById(id);
+        if(entityInDb.isEmpty()) {
+            throw new BaseNotFoundException(entityClass, "provided id " + id + " not found in database");
+        }
+        return entityInDb;
     }
 }
