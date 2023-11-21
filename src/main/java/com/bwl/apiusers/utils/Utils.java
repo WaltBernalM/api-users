@@ -54,11 +54,20 @@ public class Utils {
         try {
             D dto = dtoClass.getDeclaredConstructor().newInstance();
             for (Field dtoField : dtoClass.getDeclaredFields()) {
-                Field entitiyField = findMatchingField(entity.getClass(), dtoField.getName());
-                if (entitiyField != null) {
-                    entitiyField.setAccessible(true);
+                Field entityField = findMatchingField(entity.getClass(), dtoField.getName());
+                if (entityField != null) {
+                    entityField.setAccessible(true);
                     dtoField.setAccessible(true);
-                    dtoField.set(dto, entitiyField.get(entity));
+                    if (isForeignKeyModel(entityField) && entityField.getName().length() > 2 && entityField.getName().contains("id")) {
+                        Object entityFieldValue = entityField.get(entity);
+                        Field idField = findMatchingField(entityFieldValue.getClass(), "id");
+                        assert idField != null;
+                        idField.setAccessible(true);
+                        Integer idValue = (Integer) idField.get(entityFieldValue);
+                        dtoField.set(dto, idField.get(entityFieldValue));
+                    } else {
+                        dtoField.set(dto, entityField.get(entity));
+                    }
                 }
             }
             return dto;
@@ -92,5 +101,9 @@ public class Utils {
             throw new BaseNotFoundException(entityClass, "provided id " + id + " not found in database");
         }
         return entityInDb;
+    }
+
+    private static boolean isForeignKeyModel(Field field) {
+        return !field.getType().isPrimitive() && !field.getType().isAssignableFrom(String.class);
     }
 }
