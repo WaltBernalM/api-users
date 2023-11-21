@@ -93,7 +93,7 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
             if (!clientNamesInDb.isEmpty()) {
                 Client first = clientNamesInDb.getFirst();
                 if (!Objects.equals(first.getId(), id)) {
-                    throw new BaseNotFoundException(Client.class, "name already taken");
+                    throw new BaseNotFoundException(Client.class, "name already taken registered to another Client id");
                 }
             }
 
@@ -102,7 +102,7 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
             if (!clientShortNamesInDb.isEmpty()) {
                 Client first = clientShortNamesInDb.getFirst();
                 if (!Objects.equals(first.getId(), id)) {
-                    throw new BaseNotFoundException(Client.class, "short name already taken");
+                    throw new BaseNotFoundException(Client.class, "short name already registered to another Client id");
                 }
             }
 
