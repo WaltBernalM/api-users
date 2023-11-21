@@ -23,8 +23,8 @@ public class ProjectController implements GenericCRUDController<NewProjectDTO, U
     }
 
     @Override
-    public ResponseEntity<?> updateOne(Integer id, UpdateProjectDTO updateEntityDTO) {
-        return null;
+    public ResponseEntity<?> updateOne(Integer id, UpdateProjectDTO updateProjectDTO) {
+        return service.updateProject(id, updateProjectDTO);
     }
 
     @Override
