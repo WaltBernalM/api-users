@@ -1,30 +1,29 @@
 package com.bwl.apiusers.controllers;
 
-
-import com.bwl.apiusers.dtos.NewProjectDTO;
-import com.bwl.apiusers.dtos.UpdateProjectDTO;
-import com.bwl.apiusers.services.ProjectService;
+import com.bwl.apiusers.dtos.NewClientDTO;
+import com.bwl.apiusers.dtos.UpdateClientDTO;
+import com.bwl.apiusers.services.ClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/projects")
-public class ProjectController implements GenericCRUDController<NewProjectDTO, UpdateProjectDTO>{
-    private final ProjectService service;
+@RequestMapping("/api/clients")
+public class ClientController implements GenericCRUDController<NewClientDTO, UpdateClientDTO> {
+    private final ClientService service;
 
-    public ProjectController(ProjectService service) {
+    public ClientController(ClientService service) {
         this.service = service;
     }
 
     @Override
-    public ResponseEntity<?> postNew(NewProjectDTO newProjectDTO) {
-        return service.newProjectSignup(newProjectDTO);
+    public ResponseEntity<?> postNew(NewClientDTO newClientDTO) {
+        return service.newClientSignup(newClientDTO);
     }
 
     @Override
-    public ResponseEntity<?> updateOne(Integer id, UpdateProjectDTO updateEntityDTO) {
-        return null;
+    public ResponseEntity<?> updateOne(Integer id, UpdateClientDTO updateClientDTO) {
+        return service.updateClient(id, updateClientDTO);
     }
 
     @Override
