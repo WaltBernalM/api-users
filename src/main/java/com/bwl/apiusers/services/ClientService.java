@@ -7,7 +7,10 @@ import com.bwl.apiusers.dtos.UpdateClientDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.models.Client;
+import com.bwl.apiusers.models.Project;
+import com.bwl.apiusers.repositories.ApplicationProjectRepository;
 import com.bwl.apiusers.repositories.ClientRepository;
+import com.bwl.apiusers.repositories.ProjectRepository;
 import com.bwl.apiusers.utils.Utils;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -21,29 +24,35 @@ import java.util.*;
 
 @Service
 public class ClientService extends  GenericReadService<Client, ClientDTO, ClientRepository, ClientModelAssembler> {
-    private final ClientRepository repository;
+    private final ClientRepository clientRepository;
     private final ClientModelAssembler assembler;
+    private final ProjectRepository projectRepository;
+    private final ApplicationProjectRepository applicationProjectRepository;
 
     public ClientService(
-            ClientRepository repository,
-            ClientModelAssembler assembler
+            ClientRepository clientRepository,
+            ClientModelAssembler assembler,
+            ProjectRepository projectRepository,
+            ApplicationProjectRepository applicationProjectRepository
     ){
-        super(repository, assembler, Client.class, ClientDTO.class);
-        this.repository = repository;
+        super(clientRepository, assembler, Client.class, ClientDTO.class);
+        this.clientRepository = clientRepository;
         this.assembler = assembler;
+        this.projectRepository = projectRepository;
+        this.applicationProjectRepository = applicationProjectRepository;
     }
 
     public ResponseEntity<?> newClientSignup(@RequestBody NewClientDTO newClientDTO) {
         try {
             String newClientDTOName = newClientDTO.getName();
-            Optional<Client> clientInDb = repository.findOneByName(newClientDTOName);
+            Optional<Client> clientInDb = clientRepository.findOneByName(newClientDTOName);
 
             String newClientDTOShortName = newClientDTO.getShortName();
-            Optional<Client> clientShortNameInDb = repository.findOneByShortName(newClientDTOShortName);
+            Optional<Client> clientShortNameInDb = clientRepository.findOneByShortName(newClientDTOShortName);
 
             if(clientInDb.isEmpty() && clientShortNameInDb.isEmpty()) {
                 Client newClient = parseToClient(newClientDTO);
-                Client savedClient = repository.save(newClient);
+                Client savedClient = clientRepository.save(newClient);
 
                 Map<String, Object> body = new HashMap<>();
                 body.put("client", savedClient);
@@ -63,7 +72,7 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
     @Override
     public ResponseEntity<?> one(@PathVariable Integer id) {
         try {
-            Client client = repository.findById(id).orElseThrow(() -> new BaseNotFoundException(Client.class, id));
+            Client client = clientRepository.findById(id).orElseThrow(() -> new BaseNotFoundException(Client.class, id));
             ClientDTO dto = Utils.convertToDTO(client, ClientDTO.class);
             EntityModel<ClientDTO> entityModel = assembler.toModel(dto);
 
@@ -76,11 +85,11 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
 
     public ResponseEntity<?> updateClient(@PathVariable Integer id, @RequestBody UpdateClientDTO updateClientDTO) {
         try {
-            Client clientInDb = repository.findById(id)
+            Client clientInDb = clientRepository.findById(id)
                     .orElseThrow(() -> new BaseNotFoundException(Client.class, "id not found in database"));
 
             String updateClientDTOName = updateClientDTO.getName();
-            List<Client> clientNamesInDb = repository.findAllByName(updateClientDTOName);
+            List<Client> clientNamesInDb = clientRepository.findAllByName(updateClientDTOName);
             if (!clientNamesInDb.isEmpty()) {
                 Client first = clientNamesInDb.getFirst();
                 if (!Objects.equals(first.getId(), id)) {
@@ -89,7 +98,7 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
             }
 
             String updateClientDTOShortName = updateClientDTO.getShortName();
-            List<Client> clientShortNamesInDb = repository.findAllByShortName(updateClientDTOShortName);
+            List<Client> clientShortNamesInDb = clientRepository.findAllByShortName(updateClientDTOShortName);
             if (!clientShortNamesInDb.isEmpty()) {
                 Client first = clientShortNamesInDb.getFirst();
                 if (!Objects.equals(first.getId(), id)) {
@@ -111,7 +120,7 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
                 }
             }
 
-            Client updatedClient = repository.save(clientInDb);
+            Client updatedClient = clientRepository.save(clientInDb);
             body.put("client", updatedClient);
 
             Map<String, Object> response = new HashMap<>();
@@ -126,12 +135,22 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
 
     public ResponseEntity<?> deleteClient(@PathVariable Integer id) {
         try {
-            Client clientToDelete = repository.findById(id)
+            Client clientToDelete = clientRepository.findById(id)
                     .orElseThrow(() -> new BaseNotFoundException(Client.class, "id was not found in database"));
+            List<Project> projectsWithClient = projectRepository.findAllByIdClient(clientToDelete);
 
+            if (!projectsWithClient.isEmpty()) {
+                throw new BaseNotFoundException(Client.class, "target cannot be erased, Projects still contains this Client");
+            }
 
+            clientRepository.deleteById(id);
 
-            return null;
+            Map<String, Object> body = new HashMap<>();
+            ClientDTO clientDeleted = Utils.convertToDTO(clientToDelete, ClientDTO.class);
+            body.put("client", clientDeleted);
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", body);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
