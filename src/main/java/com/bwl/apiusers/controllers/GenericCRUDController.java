@@ -9,8 +9,8 @@ public interface GenericCRUDController<N, U> extends GenericController {
     public ResponseEntity<?> postNew(@RequestBody N newEntityDTO);
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody U updateEntityDTO);
+    public ResponseEntity<?> updateOne(@PathVariable Integer id, @RequestBody U updateEntityDTO);
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id);
+    public ResponseEntity<?> deleteOne(@PathVariable Integer id);
 }
