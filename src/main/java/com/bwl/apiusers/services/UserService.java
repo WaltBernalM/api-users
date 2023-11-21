@@ -27,7 +27,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
     private final ProfileRepository profileRepository;
     private final ApplicationRepository applicationRepository;
     private final UserProfileRepository userProfileRepository;
-    private  final UserApplicationRepository userApplicationRepository;
+    private final UserApplicationRepository userApplicationRepository;
 
     public UserService(
             ProfileRepository profileRepository,
@@ -82,14 +82,14 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
 
         } catch(Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public ResponseEntity<?> one(@PathVariable Integer id) {
         try {
-            User user = getRepository().findById(id).orElseThrow(() -> new BaseNotFoundException(Profile.class, id));
+            User user = getRepository().findById(id).orElseThrow(() -> new BaseNotFoundException(User.class, id));
             UserDTO dto = Utils.convertToDTO(user, UserDTO.class);
             EntityModel<UserDTO> entityModel = assembler.toModel(dto);
 
