@@ -106,7 +106,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             if (!usernamesInDb.isEmpty()) {
                 User first = usernamesInDb.get(0);
                 if (!Objects.equals(first.getId(), id)) {
-                    throw new BaseNotFoundException(User.class, "username is already taken");
+                    throw new BaseNotFoundException(User.class, "username is already taken by another User");
                 }
             }
 
