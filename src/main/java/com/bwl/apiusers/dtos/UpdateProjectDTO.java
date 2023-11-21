@@ -10,4 +10,6 @@ public class UpdateProjectDTO implements DTO {
     private String keycode;
     private String description;
     private Integer idClient;
+    private Boolean enabled;
+    private Integer idApplication;
 }
