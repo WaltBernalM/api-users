@@ -1,7 +1,6 @@
 package com.bwl.apiusers.services;
 
 import com.bwl.apiusers.assemblers.ProfileModelAssembler;
-import com.bwl.apiusers.dtos.DTO;
 import com.bwl.apiusers.dtos.ProfileDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
@@ -15,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
-public class ProfileService extends GenericReadService<Profile, DTO, ProfileRepository, ProfileModelAssembler> {
+public class ProfileService extends GenericReadService<Profile, ProfileDTO, ProfileRepository, ProfileModelAssembler> {
     public ProfileService(ProfileRepository repository, ProfileModelAssembler assembler) {
-        super(repository, assembler, Profile.class, DTO.class);
+        super(repository, assembler, Profile.class, ProfileDTO.class);
     }
 
     @Override
