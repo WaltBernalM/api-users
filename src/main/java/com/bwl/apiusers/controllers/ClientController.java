@@ -28,7 +28,7 @@ public class ClientController implements GenericCRUDController<NewClientDTO, Upd
 
     @Override
     public ResponseEntity<?> deleteOne(Integer id) {
-        return null;
+        return service.deleteClient(id);
     }
 
     @Override
