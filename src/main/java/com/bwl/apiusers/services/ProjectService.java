@@ -66,11 +66,11 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
             if (projectInDB.isEmpty()) {
                 Project newProject = parseToProject(newProjectDTO, clientInDb.get());
                 Project savedProject = projectRepository.save(newProject);
-                 addNewApplicationProjectRow(savedProject, applicationInDb.get());
+                addNewApplicationProjectRow(savedProject, applicationInDb.get());
 
                 Map<String, Object> body = new HashMap<>();
-                body.put("project", newProject);
-                // body.put("idApplication", applicationId);
+                ProjectDTO dto = Utils.convertToDTO(savedProject, ProjectDTO.class);
+                body.put("project", dto);
 
                 Map<String, Object> response = new HashMap<>();
                 response.put("data", body);
@@ -100,7 +100,7 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
     private Project parseToProject(NewProjectDTO newProjectDTO, Client idClient) {
         Project newProject = new Project();
         newProject.setName(newProjectDTO.getName());
-        newProject.setKeycode(newProject.getKeycode());
+        newProject.setKeycode(newProjectDTO.getKeycode());
         newProject.setDescription(newProjectDTO.getDescription());
         newProject.setIdClient(idClient);
         newProject.setCreationDate(new Date());
