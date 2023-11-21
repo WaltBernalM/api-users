@@ -31,5 +31,5 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "ID_CLIENT", nullable = false)
-    private Application idApplication;
+    private Client idClient;
 }
