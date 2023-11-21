@@ -22,12 +22,12 @@ public class UserController implements GenericCRUDController<NewUserDTO, UpdateU
     }
 
     @Override
-    public ResponseEntity<?> updateUser(Integer id, UpdateUserDTO updateUserDTO) {
+    public ResponseEntity<?> updateOne(Integer id, UpdateUserDTO updateUserDTO) {
         return service.updateUser(id, updateUserDTO);
     }
 
     @Override
-    public ResponseEntity<?> deleteUser(Integer id) {
+    public ResponseEntity<?> deleteOne(Integer id) {
         return service.deleteUser(id);
     }
 
