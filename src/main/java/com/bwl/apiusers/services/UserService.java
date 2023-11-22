@@ -48,7 +48,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
     public ResponseEntity<?> newUserSignup(@RequestBody NewUserDTO newUserDTO) {
         try {
             String newUserDTOUserName = newUserDTO.getUserName();
-            Optional<User> userInDb = userRepository.findOneByUserName(newUserDTOUserName);
+            Optional<User> userInDb = userRepository.findOneByUsername(newUserDTOUserName);
 
             Integer profileId = newUserDTO.getProfileId();
             Optional<Profile> profileInDb = Utils.verifyExistence(profileId, profileRepository, Profile.class);
@@ -102,7 +102,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
 
             // Verify if userName is already taken
             String updateUserDTOUserName = updateUserDTO.getUserName();
-            List<User> usernamesInDb = userRepository.findAllByUserName(updateUserDTOUserName);
+            List<User> usernamesInDb = userRepository.findAllByUsername(updateUserDTOUserName);
             if (!usernamesInDb.isEmpty()) {
                 User first = usernamesInDb.get(0);
                 if (!Objects.equals(first.getId(), id)) {
@@ -205,7 +205,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
         newUser.setSuperUser(false);
         newUser.setTwoFactorAuth(false);
         newUser.setTwoFactorAuthLimit(null);
-        newUser.setUserName(newUserDTO.getUserName());
+        newUser.setUsername(newUserDTO.getUserName());
         newUser.setLastLoginTime(null);
         newUser.setRecoveryToken(null);
         newUser.setCredentialsExpired(false);
