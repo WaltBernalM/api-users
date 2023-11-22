@@ -55,8 +55,4 @@ public class WebSecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    public static void main(String[] args) {
-        System.out.println("pass: " + new BCryptPasswordEncoder().encode("walter"));
-    }
 }
