@@ -29,10 +29,12 @@ public class WebSecurityConfig {
         jwtAuthenticationFilter.setAuthenticationManager(authManager);
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
-        return http.csrf(AbstractHttpConfigurer::disable)
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/public/**").permitAll()
+//                                .requestMatchers("/api/**").hasAnyRole("C", "R", "U", "D")
                                 .requestMatchers("/api/**").authenticated()
                 )
                 .sessionManagement(sessionManagement ->
