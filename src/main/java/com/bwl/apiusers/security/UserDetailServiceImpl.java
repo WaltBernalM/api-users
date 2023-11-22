@@ -9,9 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
@@ -22,6 +20,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private final UserProfileRepository userProfileRepository;
     private final ProfileRepository profileRepository;
     private final PermissionRepository permissionRepository;
+    private final ProfilePermissionRepository profilePermissionRepository;
 
     private static final ThreadLocal<Integer> idApplicationThreadLocal = new ThreadLocal<>();
 
@@ -31,13 +30,15 @@ public class UserDetailServiceImpl implements UserDetailsService {
             UserApplicationRepository userApplicationRepository,
             UserProfileRepository userProfileRepository,
             ProfileRepository profileRepository,
-            PermissionRepository permissionRepository) {
+            PermissionRepository permissionRepository,
+            ProfilePermissionRepository profilePermissionRepository) {
         this.userRepository = userRepository;
         this.applicationRepository = applicationRepository;
         this.userApplicationRepository = userApplicationRepository;
         this.userProfileRepository = userProfileRepository;
         this.profileRepository = profileRepository;
         this.permissionRepository = permissionRepository;
+        this.profilePermissionRepository = profilePermissionRepository;
     }
 
     public static void setIdApplication(Integer idApplication) {
@@ -63,29 +64,61 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .findOneByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found"));
 
-        Optional<UserApplication> userApplications = userApplicationRepository.findOneByIdUserAndIdApplication(user, application);
-        if (userApplications.isEmpty()) {
+        Optional<UserApplication> userApplication = userApplicationRepository.findOneByIdUserAndIdApplication(user, application);
+        if (userApplication.isEmpty()) {
             throw new IllegalStateException("No relationship between Application and User");
         }
 
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
 
-        // get profileKeycodes assigned to User
-        List<Integer> userProfileIds = userProfileRepository.findAllByIdUser(user)
+        // Block to find Profiles related by Application and User
+        Application appAssignedToUser = userApplication.get().getIdApplication();
+        System.out.println(appAssignedToUser);
+        List<Profile> allProfilesRelatedToApp = profileRepository.findAllByIdApplication(appAssignedToUser);
+        System.out.println(allProfilesRelatedToApp);
+        List<Profile> profilesCommonByAppAndUser = userProfileRepository.findAll()
                 .stream()
-                .map(row -> row.getIdProfile().getId())
+                .filter(userProfile -> userProfile.getIdUser().equals(user))
+                .filter(userProfile -> allProfilesRelatedToApp.contains(userProfile.getIdProfile()))
+                .map(UserProfile::getIdProfile)
                 .toList();
-        List<String> userProfileKeycodes = new ArrayList<>();
-        for(Integer profileId : userProfileIds) {
-            Optional<Profile> profile = profileRepository.findById(profileId);
-            profile.ifPresent(value -> userProfileKeycodes.add(value.getKeycode()));
+        System.out.println(profilesCommonByAppAndUser);
+        List<String> profileKeycodesCommonByAppAndUser = profilesCommonByAppAndUser
+                .stream()
+                .map(Profile::getKeycode)
+                .toList();
+        userDetails.setProfileKeycodes(profileKeycodesCommonByAppAndUser);
+
+        // get profileKeycodes assigned to User
+//        List<Integer> userProfileIds = userProfileRepository.findAllByIdUser(user)
+//                .stream()
+//                .map(row -> row.getIdProfile().getId())
+//                .toList();
+//        List<String> userProfileKeycodes = new ArrayList<>();
+//        for(Integer profileId : userProfileIds) {
+//            Optional<Profile> profile = profileRepository.findById(profileId);
+//            profile.ifPresent(value -> userProfileKeycodes.add(value.getKeycode()));
+//        }
+//        userDetails.setProfileKeycodes(userProfileKeycodes);
+
+//        List<Permission> profilePermissions = new ArrayList<>();
+        Map<String, Object> main = new LinkedHashMap<>();
+        for (Profile profile : profilesCommonByAppAndUser) {
+            Map<String, Object> permissionByProfile = new LinkedHashMap<>();
+            List<ProfilePermission> profilePermissionsRelated = profilePermissionRepository.findAllByIdProfile(profile);
+            for(ProfilePermission profilePermission: profilePermissionsRelated) {
+                Permission permission = profilePermission.getIdPermission();
+                permissionByProfile.put(
+                        "idPermissionKeyCode_" + permission.getId(),
+                        permission.getKeycode()
+                );
+            }
+            main.put(profile.getKeycode(), permissionByProfile);
         }
-        userDetails.setProfileKeycodes(userProfileKeycodes);
+        userDetails.setProfilePermissions(main);
+
 
         userDetails.setIdApplication(idApplication);
-
-        List<ProfilePermission> profilePermissions;
-
         clearIdApplication();
         return userDetails;
     }
