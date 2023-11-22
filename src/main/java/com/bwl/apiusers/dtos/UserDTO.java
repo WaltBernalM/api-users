@@ -11,5 +11,5 @@ public class UserDTO implements DTO {
     private Integer id;
     private String name;
     private String email;
-    private String userName;
+    private String username;
 }
