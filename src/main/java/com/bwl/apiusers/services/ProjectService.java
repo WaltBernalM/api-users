@@ -165,6 +165,26 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
         }
     }
 
+    public ResponseEntity<?> deleteProject(@PathVariable Integer id) {
+        try {
+            Project  projectToDelete = projectRepository.findById(id)
+                    .orElseThrow(() -> new BaseNotFoundException(Project.class, "id not found in database"));
+
+            // Delete all ApplicationProject row related to Project
+            List<ApplicationProject> applicationProjectsRelated = applicationProjectRepository.findAllByIdProject(projectToDelete);
+            for (ApplicationProject row : applicationProjectsRelated) {
+                Integer applicationProjectId = row.getId();
+                applicationProjectRepository.deleteById(applicationProjectId);
+            }
+
+            projectRepository.deleteById(id);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        } catch(Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private Project parseToProject(NewProjectDTO newProjectDTO, Client idClient) {
         Project newProject = new Project();
         newProject.setName(newProjectDTO.getName());
