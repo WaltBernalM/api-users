@@ -104,7 +104,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         userDetails.setIdApplication(idApplication);
         userDetails.setAuthorities(userAuthorities);
 
-        System.out.println("user authorities: " + userDetails.getAuthorities());
         clearIdApplication();
         return userDetails;
     }
@@ -115,14 +114,15 @@ public class UserDetailServiceImpl implements UserDetailsService {
         main.forEach((profileKeycode, permissions) -> {
             if(permissions instanceof Map) {
                 ((Map<?,?>) permissions).forEach((permissionKey, permissionValue) -> {
-                    String authority = (String) permissionValue;
-                    SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority("ROLE_" + authority);
+                    String authority = "ROLE_" + (String) permissionValue;
+                    SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority(authority);
                     if(!authorities.contains(simpleAuthority)) {
                         authorities.add(simpleAuthority);
                     }
                 });
             }
         });
+        System.out.println("Authorities from getUserAuthorities: " + authorities);
         return authorities;
     }
 }
