@@ -1,0 +1,12 @@
+[
+  {
+    "name": "App 1",
+    "description": "Application 1",
+    "keycode": "APP1"
+  },
+  {
+    "name": "App 2",
+    "description": "Application 2",
+    "keycode": "APP2"
+  }
+]
