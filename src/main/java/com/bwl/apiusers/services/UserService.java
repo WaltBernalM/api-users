@@ -47,7 +47,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
 
     public ResponseEntity<?> newUserSignup(@RequestBody NewUserDTO newUserDTO) {
         try {
-            String newUserDTOUserName = newUserDTO.getUserName();
+            String newUserDTOUserName = newUserDTO.getUsername();
             Optional<User> userInDb = userRepository.findOneByUsername(newUserDTOUserName);
 
             Integer profileId = newUserDTO.getProfileId();
@@ -101,7 +101,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
                     .orElseThrow(() -> new BaseNotFoundException(User.class, "id not found in database"));
 
             // Verify if userName is already taken
-            String updateUserDTOUserName = updateUserDTO.getUserName();
+            String updateUserDTOUserName = updateUserDTO.getUsername();
             List<User> usernamesInDb = userRepository.findAllByUsername(updateUserDTOUserName);
             if (!usernamesInDb.isEmpty()) {
                 User first = usernamesInDb.get(0);
@@ -205,7 +205,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
         newUser.setSuperUser(false);
         newUser.setTwoFactorAuth(false);
         newUser.setTwoFactorAuthLimit(null);
-        newUser.setUsername(newUserDTO.getUserName());
+        newUser.setUsername(newUserDTO.getUsername());
         newUser.setLastLoginTime(null);
         newUser.setRecoveryToken(null);
         newUser.setCredentialsExpired(false);

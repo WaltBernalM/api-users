@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 public class UpdateUserDTO implements DTO {
     private String email;
     private String name;
-    private String userName;
+    private String username;
     private Integer[] idProfiles;
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class NewUserDTO implements DTO {
     private String email;
     private String name;
-    private String userName;
+    private String username;
     private Integer profileId;
     private Integer applicationId;
     private String password;
