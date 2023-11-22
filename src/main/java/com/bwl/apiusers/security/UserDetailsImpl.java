@@ -1,6 +1,5 @@
 package com.bwl.apiusers.security;
 
-import com.bwl.apiusers.models.Permission;
 import com.bwl.apiusers.models.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class UserDetailsImpl implements UserDetails {
@@ -16,11 +16,10 @@ public class UserDetailsImpl implements UserDetails {
     private final User user;
     private Integer idApplication;
     private List<String> profileKeycodes;
-    private List<Permission> profilePermissions;
+    private Map<String, Object> profilePermissions;
 
     public UserDetailsImpl(User user) {
         this.user = user;
-//        this.idApplication = idApplication;
     }
 
     @Override
