@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Root",
+        "description": "Full CRUD",
+        "keycode": "ROOT"
+    },
+    {
+        "name": "Administrator",
+        "description": "Access to CRU",
+        "keycode": "ADMIN"
+    },
+    {
+        "name": "User",
+        "description": "Read only access",
+        "keycode": "USER"
+    }
+]
