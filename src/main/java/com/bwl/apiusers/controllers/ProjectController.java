@@ -29,7 +29,7 @@ public class ProjectController implements GenericCRUDController<NewProjectDTO, U
 
     @Override
     public ResponseEntity<?> deleteOne(Integer id) {
-        return null;
+        return service.deleteProject(id);
     }
 
     @Override
