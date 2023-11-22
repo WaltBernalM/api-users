@@ -12,17 +12,17 @@ import java.util.*;
 
 public class TokenUtils {
     private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final static Long ACCESS_WEB_VALIDITY_SECONDS = 2_000L;
+    private final static Long ACCESS_TOKEN_VALIDITY_SECONDS = 2_000L;
 
-    public static String createToken(String userName, String email) {
-        long expirationTime = ACCESS_WEB_VALIDITY_SECONDS * 1_000;
+    public static String createToken(String name, String email) {
+        long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
 
         Map<String, Object> extra = new HashMap<>();
-        extra.put("email", email);
+        extra.put("name", name);
 
         return Jwts.builder()
-                .setSubject(userName)
+                .setSubject(email)
                 .setExpiration(expirationDate)
                 .addClaims(extra)
                 .signWith(SECRET_KEY)
@@ -37,10 +37,9 @@ public class TokenUtils {
                     .parseClaimsJws(token)
                     .getBody();
 
-            String userName = claims.getSubject();
-
-            return new UsernamePasswordAuthenticationToken(userName, null, Collections.emptyList());
-        } catch (JwtException e){
+            String email = claims.getSubject();
+            return new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+        } catch (JwtException e) {
             return null;
         }
     }

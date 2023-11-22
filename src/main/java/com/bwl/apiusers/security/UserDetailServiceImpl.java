@@ -12,18 +12,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
+
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        List<String> all = userRepository.findAll().stream().map(User::getUsername).toList();
-        System.out.println(all + " " + userName);
-
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository
-                .findOneByUsername(userName)
-                .orElseThrow(() -> new BaseNotFoundException(User.class, "Username not found in database"));
+                .findOneByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
 
         return new UserDetailsImpl(user);
     }
