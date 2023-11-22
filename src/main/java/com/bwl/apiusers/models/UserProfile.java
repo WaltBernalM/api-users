@@ -1,6 +1,5 @@
 package com.bwl.apiusers.models;
 
-import com.bwl.apiusers.repositories.UserComposedRepository;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;

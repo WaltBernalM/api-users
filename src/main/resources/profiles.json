@@ -86,5 +86,27 @@
       "description": "Application 2",
       "keycode": "APP2"
     }
+  },
+  {
+    "name": "Account Manager",
+    "description": "Account Manager",
+    "keycode": "AM",
+    "idApplication": {
+      "id": 1,
+      "name": "App 1",
+      "description": "Application 1",
+      "keycode": "APP1"
+    }
+  },
+  {
+    "name": "Account Manager",
+    "description": "Account Manager",
+    "keycode": "AM",
+    "idApplication": {
+      "id": 2,
+      "name": "App 2",
+      "description": "Application 2",
+      "keycode": "APP2"
+    }
   }
 ]

@@ -1,0 +1,138 @@
+[
+  {
+    "idUser": {
+      "id": 1,
+      "email": "ebernal@bwl.com.mx",
+      "enabled": true,
+      "force2FA": false,
+      "hash": "$2a$10$Pds6jqDzlB/wu12NOxlEwONGloKibl9P5SHzcudUKUSCGXUtvoF2S",
+      "hash2FA": "",
+      "lastJwt": "",
+      "lastPasswordChange": "2023-11-16 17:10:50.941000",
+      "name": "Eli Bernal",
+      "preAuth": null,
+      "superUser": false,
+      "twoFactorAuth": false,
+      "twoFactorAuthLimit": null,
+      "username": "ebernal",
+      "lastLoginTime": null,
+      "recoveryToken": null,
+      "credentialsExpired": false,
+      "creationDate": "2023-11-16 17:10:50.941000"
+    },
+    "idProfile": {
+      "id": 4,
+      "name": "Project Manager",
+      "description": "Project Manager",
+      "keycode": "PM",
+      "idApplication": {
+        "id": 1,
+        "name": "App 1",
+        "description": "Application 1",
+        "keycode": "APP1"
+      }
+    }
+  },
+  {
+    "idUser": {
+      "id": 2,
+      "email": "wbernal@bwl.com.mx",
+      "enabled": true,
+      "force2FA": false,
+      "hash": "$2a$10$.nuoSwYz2CHE0VnT2QLMPuihVw2dVcFHXSPQoNV.pOc2WWNl8qVTu",
+      "hash2FA": "",
+      "lastJwt": "",
+      "lastPasswordChange": "2023-11-17 16:45:05.091000",
+      "name": "Walter Bernal",
+      "preAuth": null,
+      "superUser": false,
+      "twoFactorAuth": false,
+      "twoFactorAuthLimit": null,
+      "username": "wbernal",
+      "lastLoginTime": null,
+      "recoveryToken": null,
+      "credentialsExpired": false,
+      "creationDate": "2023-11-17 16:45:05.091000"
+    },
+    "idProfile": {
+      "id": 5,
+      "name": "Developer",
+      "description": "Software Developer",
+      "keycode": "DEV",
+      "idApplication": {
+        "id": 2,
+        "name": "App 2",
+        "description": "Application 2",
+        "keycode": "APP2"
+      }
+    }
+  },
+  {
+    "idUser": {
+      "id": 3,
+      "email": "emontero@bwl.com.mx",
+      "enabled": true,
+      "force2FA": false,
+      "hash": "$2a$10$iVTR9xb192I5Q7QLgI3Noe6u/itZw.ozfajVXygESQ5aCCzL12ZIi",
+      "hash2FA": "",
+      "lastJwt": "",
+      "lastPasswordChange": "2023-11-21 22:54:02.481000",
+      "name": "Eli Montero",
+      "preAuth": null,
+      "superUser": false,
+      "twoFactorAuth": false,
+      "twoFactorAuthLimit": null,
+      "username": "emontero",
+      "lastLoginTime": null,
+      "recoveryToken": null,
+      "credentialsExpired": false,
+      "creationDate": "2023-11-21 22:54:02.481000"
+    },
+    "idProfile": {
+      "id": 7,
+      "name": "Designer",
+      "description": "UX/UI Designer",
+      "keycode": "DES",
+      "idApplication": {
+        "id": 2,
+        "name": "App 2",
+        "description": "Application 2",
+        "keycode": "APP2"
+      }
+    }
+  },
+  {
+    "idUser": {
+      "id": 3,
+      "email": "emontero@bwl.com.mx",
+      "enabled": true,
+      "force2FA": false,
+      "hash": "$2a$10$iVTR9xb192I5Q7QLgI3Noe6u/itZw.ozfajVXygESQ5aCCzL12ZIi",
+      "hash2FA": "",
+      "lastJwt": "",
+      "lastPasswordChange": "2023-11-21 22:54:02.481000",
+      "name": "Eli Montero",
+      "preAuth": null,
+      "superUser": false,
+      "twoFactorAuth": false,
+      "twoFactorAuthLimit": null,
+      "username": "emontero",
+      "lastLoginTime": null,
+      "recoveryToken": null,
+      "credentialsExpired": false,
+      "creationDate": "2023-11-21 22:54:02.481000"
+    },
+    "idProfile": {
+      "id": 10,
+      "name": "Account Manager",
+      "description": "Account Manager",
+      "keycode": "AM",
+      "idApplication": {
+        "id": 2,
+        "name": "App 2",
+        "description": "Application 2",
+        "keycode": "APP2"
+      }
+    }
+  }
+]
