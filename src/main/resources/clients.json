@@ -1,0 +1,17 @@
+[
+  {
+    "name": "General Motors",
+    "shortName": "GM",
+    "enabled": true
+  },
+  {
+    "name": "Mercedes Benz GmbH",
+    "shortName": "MB",
+    "enabled": true
+  },
+  {
+    "name": "Volkswagen Group",
+    "shortName": "VW",
+    "enabled": true
+  }
+]
