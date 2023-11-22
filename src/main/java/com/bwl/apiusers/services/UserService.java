@@ -136,13 +136,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
                     newUserProfile.setIdUser(userInDb);
                     userProfileRepository.save(newUserProfile);
                 }
-                List<UserProfile> updatedUserProfiles = userProfileRepository.findAllByIdUser(userInDb);
-                List<Integer> updatedUserProfilesIds = updatedUserProfiles.stream()
-                        .map(UserProfile::getId)
-                        .toList();
             }
-
-            UserDTO currentUserData = Utils.convertToDTO(userInDb, UserDTO.class);
 
             // Update of userInDb values as of updateUserDTO
             for (Field field : updateUserDTO.getClass().getDeclaredFields()) {
