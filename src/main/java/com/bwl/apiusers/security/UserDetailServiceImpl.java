@@ -78,34 +78,20 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .filter(userProfile -> allProfilesRelatedToApp.contains(userProfile.getIdProfile()))
                 .map(UserProfile::getIdProfile)
                 .toList();
-        System.out.println(profilesCommonByAppAndUser);
         List<String> profileKeycodesCommonByAppAndUser = profilesCommonByAppAndUser
                 .stream()
                 .map(Profile::getKeycode)
                 .toList();
         userDetails.setProfileKeycodes(profileKeycodesCommonByAppAndUser);
 
-        // get profileKeycodes assigned to User
-//        List<Integer> userProfileIds = userProfileRepository.findAllByIdUser(user)
-//                .stream()
-//                .map(row -> row.getIdProfile().getId())
-//                .toList();
-//        List<String> userProfileKeycodes = new ArrayList<>();
-//        for(Integer profileId : userProfileIds) {
-//            Optional<Profile> profile = profileRepository.findById(profileId);
-//            profile.ifPresent(value -> userProfileKeycodes.add(value.getKeycode()));
-//        }
-//        userDetails.setProfileKeycodes(userProfileKeycodes);
-
-//        List<Permission> profilePermissions = new ArrayList<>();
         Map<String, Object> main = new LinkedHashMap<>();
         for (Profile profile : profilesCommonByAppAndUser) {
-            Map<String, Object> permissionByProfile = new LinkedHashMap<>();
             List<ProfilePermission> profilePermissionsRelated = profilePermissionRepository.findAllByIdProfile(profile);
+            Map<String, Object> permissionByProfile = new LinkedHashMap<>();
             for(ProfilePermission profilePermission: profilePermissionsRelated) {
                 Permission permission = profilePermission.getIdPermission();
                 permissionByProfile.put(
-                        "idPermissionKeyCode_" + permission.getId(),
+                        "permissionKeyCode_" + permission.getId(),
                         permission.getKeycode()
                 );
             }
