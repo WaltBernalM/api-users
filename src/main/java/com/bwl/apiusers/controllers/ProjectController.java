@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/projects")
-public class ProjectReadController implements GenericCRUDReadController<NewProjectDTO, UpdateProjectDTO> {
+public class ProjectController implements GenericCRUDController<NewProjectDTO, UpdateProjectDTO> {
     private final ProjectService service;
 
-    public ProjectReadController(ProjectService service) {
+    public ProjectController(ProjectService service) {
         this.service = service;
     }
 

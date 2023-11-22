@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/clients")
-public class ClientReadController implements GenericCRUDReadController<NewClientDTO, UpdateClientDTO> {
+public class ClientController implements GenericCRUDController<NewClientDTO, UpdateClientDTO> {
     private final ClientService service;
 
-    public ClientReadController(ClientService service) {
+    public ClientController(ClientService service) {
         this.service = service;
     }
 
