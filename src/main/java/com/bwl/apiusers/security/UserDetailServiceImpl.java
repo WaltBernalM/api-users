@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -19,7 +18,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private final UserApplicationRepository userApplicationRepository;
     private final UserProfileRepository userProfileRepository;
     private final ProfileRepository profileRepository;
-    private final PermissionRepository permissionRepository;
     private final ProfilePermissionRepository profilePermissionRepository;
 
     private static final ThreadLocal<Integer> idApplicationThreadLocal = new ThreadLocal<>();
@@ -30,14 +28,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
             UserApplicationRepository userApplicationRepository,
             UserProfileRepository userProfileRepository,
             ProfileRepository profileRepository,
-            PermissionRepository permissionRepository,
             ProfilePermissionRepository profilePermissionRepository) {
         this.userRepository = userRepository;
         this.applicationRepository = applicationRepository;
         this.userApplicationRepository = userApplicationRepository;
         this.userProfileRepository = userProfileRepository;
         this.profileRepository = profileRepository;
-        this.permissionRepository = permissionRepository;
         this.profilePermissionRepository = profilePermissionRepository;
     }
 
