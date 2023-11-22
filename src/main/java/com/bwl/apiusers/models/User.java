@@ -52,7 +52,7 @@ public class User {
     private Date twoFactorAuthLimit;
 
     @Column(name = "USERNAME", nullable = false)
-    private String userName;
+    private String username;
 
     @Column(name= "LAST_LOGIN_TIME")
     private Date lastLoginTime;
@@ -65,4 +65,8 @@ public class User {
 
     @Column(name = "CREATION_DATE")
     private Date creationDate;
+
+    public String getPassword() {
+        return this.getHash();
+    }
 }
