@@ -48,7 +48,15 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
+    public Integer getId() {
+        return user.getId();
+    }
+
     public String getName() {
         return user.getName();
+    }
+
+    public Boolean getEnabled() {
+        return user.getEnabled();
     }
 }
