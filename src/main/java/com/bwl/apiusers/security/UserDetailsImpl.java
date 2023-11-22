@@ -1,17 +1,25 @@
 package com.bwl.apiusers.security;
 
+import com.bwl.apiusers.models.Permission;
 import com.bwl.apiusers.models.User;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
-@AllArgsConstructor
+@Data
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
+    private List<String> profileKeycodes;
+    private List<Permission> profilePermissions;
+
+    public UserDetailsImpl(User user) {
+        this.user = user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
