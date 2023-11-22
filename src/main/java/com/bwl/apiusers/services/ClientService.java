@@ -8,7 +8,6 @@ import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.models.Client;
 import com.bwl.apiusers.models.Project;
-import com.bwl.apiusers.repositories.ApplicationProjectRepository;
 import com.bwl.apiusers.repositories.ClientRepository;
 import com.bwl.apiusers.repositories.ProjectRepository;
 import com.bwl.apiusers.utils.Utils;
@@ -27,19 +26,16 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
     private final ClientRepository clientRepository;
     private final ClientModelAssembler assembler;
     private final ProjectRepository projectRepository;
-    private final ApplicationProjectRepository applicationProjectRepository;
 
     public ClientService(
             ClientRepository clientRepository,
             ClientModelAssembler assembler,
-            ProjectRepository projectRepository,
-            ApplicationProjectRepository applicationProjectRepository
+            ProjectRepository projectRepository
     ){
         super(clientRepository, assembler, Client.class, ClientDTO.class);
         this.clientRepository = clientRepository;
         this.assembler = assembler;
         this.projectRepository = projectRepository;
-        this.applicationProjectRepository = applicationProjectRepository;
     }
 
     public ResponseEntity<?> newClientSignup(@RequestBody NewClientDTO newClientDTO) {
@@ -106,10 +102,6 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
                 }
             }
 
-            Map<String, Object> body = new HashMap<>();
-
-            ClientDTO currentClientData = Utils.convertToDTO(clientInDb, ClientDTO.class);
-
             for (Field field : updateClientDTO.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 Object value = field.get(updateClientDTO);
@@ -121,6 +113,7 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
             }
 
             Client updatedClient = clientRepository.save(clientInDb);
+            Map<String, Object> body = new HashMap<>();
             body.put("client", updatedClient);
 
             Map<String, Object> response = new HashMap<>();
