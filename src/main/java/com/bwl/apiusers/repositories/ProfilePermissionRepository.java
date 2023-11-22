@@ -4,8 +4,8 @@ import com.bwl.apiusers.models.Profile;
 import com.bwl.apiusers.models.ProfilePermission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface ProfilePermissionRepository extends JpaRepository<ProfilePermission, Integer> {
-    Optional<ProfilePermission> findAllByIdProfile(Profile idProfile);
+    List<ProfilePermission> findAllByIdProfile(Profile idProfile);
 }
