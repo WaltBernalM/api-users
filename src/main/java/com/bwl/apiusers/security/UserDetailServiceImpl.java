@@ -3,6 +3,8 @@ package com.bwl.apiusers.security;
 import com.bwl.apiusers.exceptions.ApplicationNotFoundException;
 import com.bwl.apiusers.models.*;
 import com.bwl.apiusers.repositories.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -65,13 +67,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new IllegalStateException("No relationship between Application and User");
         }
 
-        UserDetailsImpl userDetails = new UserDetailsImpl(user);
-
         // Block to find Profiles related by Application and User
         Application appAssignedToUser = userApplication.get().getIdApplication();
-        System.out.println(appAssignedToUser);
         List<Profile> allProfilesRelatedToApp = profileRepository.findAllByIdApplication(appAssignedToUser);
-        System.out.println(allProfilesRelatedToApp);
         List<Profile> profilesCommonByAppAndUser = userProfileRepository.findAll()
                 .stream()
                 .filter(userProfile -> userProfile.getIdUser().equals(user))
@@ -82,7 +80,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .stream()
                 .map(Profile::getKeycode)
                 .toList();
-        userDetails.setProfileKeycodes(profileKeycodesCommonByAppAndUser);
 
         Map<String, Object> main = new LinkedHashMap<>();
         for (Profile profile : profilesCommonByAppAndUser) {
@@ -97,11 +94,34 @@ public class UserDetailServiceImpl implements UserDetailsService {
             }
             main.put(profile.getKeycode(), permissionByProfile);
         }
+
+        List<GrantedAuthority> userAuthorities = getUserAuthorities(main);
+
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+
+        userDetails.setProfileKeycodes(profileKeycodesCommonByAppAndUser);
         userDetails.setProfilePermissions(main);
-
-
         userDetails.setIdApplication(idApplication);
+        userDetails.setAuthorities(userAuthorities);
+
         clearIdApplication();
         return userDetails;
+    }
+
+    private List<GrantedAuthority> getUserAuthorities(Map<String, Object> main) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        main.forEach((profileKeycode, permissions) -> {
+            if(permissions instanceof Map) {
+                ((Map<?,?>) permissions).forEach((permissionKey, permissionValue) -> {
+                    String authority = "" + permissionValue;
+                    SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority(authority);
+                    if(!authorities.contains(simpleAuthority)) {
+                        authorities.add(new SimpleGrantedAuthority("" + permissionValue));
+                    }
+                });
+            }
+        });
+        return authorities;
     }
 }

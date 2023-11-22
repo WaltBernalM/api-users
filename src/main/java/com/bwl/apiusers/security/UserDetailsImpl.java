@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ public class UserDetailsImpl implements UserDetails {
     private Integer idApplication;
     private List<String> profileKeycodes;
     private Map<String, Object> profilePermissions;
+    private  List<GrantedAuthority> authorities;
 
     public UserDetailsImpl(User user) {
         this.user = user;
@@ -24,7 +24,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // Useful if user has authorities or roles
+        return authorities; // Useful if user has authorities or roles
     }
 
     @Override
