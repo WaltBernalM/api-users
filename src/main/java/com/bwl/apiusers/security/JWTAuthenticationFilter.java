@@ -55,6 +55,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         responseBody.put("username", userDetails.getUsername());
         responseBody.put("name", userDetails.getName());
         responseBody.put("enabled", userDetails.getEnabled());
+        responseBody.put("profileKeycodes", userDetails.getProfileKeycodes());
+        responseBody.put("profilePermissions", userDetails.getProfilePermissions());
         responseBody.put("token", "Bearer " + token);
 
         ObjectMapper objectMapper = new ObjectMapper();
