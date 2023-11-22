@@ -116,9 +116,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
             if(permissions instanceof Map) {
                 ((Map<?,?>) permissions).forEach((permissionKey, permissionValue) -> {
                     String authority = (String) permissionValue;
-                    SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority(authority);
+                    SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority("ROLE_" + authority);
                     if(!authorities.contains(simpleAuthority)) {
-                        authorities.add(new SimpleGrantedAuthority("ROLE_" + permissionValue));
+                        authorities.add(simpleAuthority);
                     }
                 });
             }
