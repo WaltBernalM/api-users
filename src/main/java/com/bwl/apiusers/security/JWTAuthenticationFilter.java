@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -12,7 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,8 +27,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         try {
             authCredentials = new ObjectMapper().readValue(request.getReader(), AuthCredentials.class);
+            if (authCredentials.getIdApplication() == null) {
+                throw new AuthenticationServiceException("Error parsing authentication request");
+            }
         } catch (IOException ignored) {
         }
+
+        UserDetailServiceImpl.setIdApplication(authCredentials.getIdApplication());
 
         UsernamePasswordAuthenticationToken usernamePAT = new UsernamePasswordAuthenticationToken(
                 authCredentials.getUsername(),
@@ -46,7 +51,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
 
-        String token = TokenUtils.createToken(userDetails.getName(), userDetails.getUsername());
+        String token = TokenUtils.createToken(userDetails.getIdApplication(), userDetails.getUsername());
 
         response.addHeader("Authorization", "Bearer " + token);
 
@@ -58,6 +63,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         responseBody.put("profileKeycodes", userDetails.getProfileKeycodes());
         responseBody.put("profilePermissions", userDetails.getProfilePermissions());
         responseBody.put("token", "Bearer " + token);
+        responseBody.put("idApplication", userDetails.getIdApplication());
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(responseBody);
@@ -66,6 +72,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonResponse);
         response.getWriter().flush();
+
+        UserDetailServiceImpl.clearIdApplication();
 
         super.successfulAuthentication(request, response, chain, authResult);
     }

@@ -14,11 +14,13 @@ import java.util.List;
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
+    private Integer idApplication;
     private List<String> profileKeycodes;
     private List<Permission> profilePermissions;
 
     public UserDetailsImpl(User user) {
         this.user = user;
+//        this.idApplication = idApplication;
     }
 
     @Override
