@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/permissions")
-public class PermissionController  implements GenericController {
+public class PermissionReadController implements GenericReadController {
 
     private final PermissionService service;
-    public PermissionController(PermissionService service) {
+    public PermissionReadController(PermissionService service) {
         this.service = service;
     }
 

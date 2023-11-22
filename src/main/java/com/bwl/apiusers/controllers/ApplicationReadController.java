@@ -1,15 +1,15 @@
 package com.bwl.apiusers.controllers;
 
-import com.bwl.apiusers.services.ProfileService;
+import com.bwl.apiusers.services.ApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/profiles")
-public class ProfileController implements GenericController {
-    private final ProfileService service;
+@RequestMapping("/api/applications")
+public class ApplicationReadController implements GenericReadController {
 
-    public ProfileController(ProfileService service) {
+    private final ApplicationService service;
+    public ApplicationReadController(ApplicationService service) {
         this.service = service;
     }
 

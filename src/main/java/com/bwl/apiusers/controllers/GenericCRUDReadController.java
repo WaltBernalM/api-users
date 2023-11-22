@@ -3,7 +3,7 @@ package com.bwl.apiusers.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-public interface GenericCRUDController<N, U> extends GenericController {
+public interface GenericCRUDReadController<N, U> extends GenericReadController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> postNew(@RequestBody N newEntityDTO);
