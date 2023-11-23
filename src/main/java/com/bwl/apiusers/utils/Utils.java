@@ -127,7 +127,7 @@ public class Utils {
     }
 
     public static void userCanCreate(Integer idApplication) throws AccessDeniedException {
-        Integer userAppAuthorityId = Utils.getUserAppAuthorityId();
+        Integer userAppAuthorityId = getUserAppAuthorityId();
         if(!userAppAuthorityId.equals(idApplication)) {
             System.out.println("Cannot create");
             throw new AccessDeniedException("Unauthorized for resource creation");
