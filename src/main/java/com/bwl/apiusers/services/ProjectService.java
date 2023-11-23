@@ -48,6 +48,10 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
     public ResponseEntity<?> newProjectSignup(@RequestBody NewProjectDTO newProjectDTO) {
         try {
             String newProjectDTOKeycode = newProjectDTO.getKeycode();
+
+            // Verify if user can Create by its idApplication authority
+            Utils.userCanCreate(newProjectDTO.getIdApplication());
+
             Optional<Project> projectInDB = projectRepository.findOneByKeycode(newProjectDTOKeycode);
 
             // Verify if id of client exists

@@ -50,7 +50,8 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
         try {
             String newUserDTOUserName = newUserDTO.getUsername();
 
-            userCanCreate(newUserDTO.getApplicationId());
+            Utils.userCanCreate(newUserDTO.getApplicationId());
+            // Verify if user can Create by its idApplication authority
 
             Optional<User> userInDb = userRepository.findOneByUsername(newUserDTOUserName);
 
@@ -276,14 +277,5 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             throw new AccessDeniedException("Resource not available for modification");
         }
         System.out.println("Can edit");
-    }
-
-    private void userCanCreate(Integer idApplication) throws AccessDeniedException {
-        Integer userAppAuthorityId = Utils.getUserAppAuthorityId();
-        if(!userAppAuthorityId.equals(idApplication)) {
-            System.out.println("Cannot create");
-            throw new AccessDeniedException("Unauthorized for resource creation");
-        }
-        System.out.println("Can create");
     }
 }
