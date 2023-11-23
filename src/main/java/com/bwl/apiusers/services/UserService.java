@@ -127,7 +127,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
                     .orElseThrow(() -> new BaseNotFoundException(User.class, "id not found in database"));
 
             // Verify if user accessing can edit the resource
-            userCanEdit(userInDb);
+            userCanModify(userInDb);
 
             // Verify if userName is already taken
             String updateUserDTOUserName = updateUserDTO.getUsername();
@@ -203,7 +203,7 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
                     .orElseThrow(() -> new BaseNotFoundException(User.class, "id was not found in database"));
 
             // Verify if user accessing can edit the resource
-            userCanEdit(userToDelete);
+            userCanModify(userToDelete);
 
             // Delete UserProfiles related to User
             Utils.deleteUserComposedEntities(userProfileRepository, userToDelete);
@@ -272,14 +272,12 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
         userApplicationRepository.save(userApplication);
     }
 
-    private void userCanEdit(User userInDb) throws AccessDeniedException {
+    private void userCanModify(User userInDb) throws AccessDeniedException {
         Integer userAppAuthorityId = Utils.getUserAppAuthorityId();
         UserApplication userApp = userApplicationRepository.findOneByIdUser(userInDb)
                 .orElseThrow(() -> new BaseNotFoundException(User.class, "User not related to any application"));
         if (!userAppAuthorityId.equals(userApp.getIdApplication().getId())) {
-            System.out.println("Cannot edit");
             throw new AccessDeniedException("Resource not available for modification");
         }
-        System.out.println("Can edit");
     }
 }
