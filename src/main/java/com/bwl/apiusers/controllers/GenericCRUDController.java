@@ -10,7 +10,7 @@ public interface GenericCRUDController<N, U> extends GenericReadController {
     @PreAuthorize("hasRole('ROOT')")
     public ResponseEntity<?> postNew(@RequestBody N newEntityDTO);
 
-    @PatchMapping("/{id}/update")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateOne(@PathVariable Integer id, @RequestBody U updateEntityDTO);
 
