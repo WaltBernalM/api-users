@@ -80,7 +80,9 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
 
                 Map<String, Object> body = new HashMap<>();
 
-                body.put("user", newUser);
+                UserDTO dto = Utils.convertToDTO(newUser, UserDTO.class);
+
+                body.put("user", dto);
                 body.put("idProfile", profileId);
                 body.put("idApplication", applicationId);
 
