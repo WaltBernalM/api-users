@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Cheyenne 2024",
+    "keycode": "CH2024",
+    "creationDate": "2023-11-21 12:34:01.348000",
+    "description": "Pickup",
+    "enabled": true,
+    "idClient": {
+      "id": 1,
+      "name": "General Motors",
+      "shortName": "GM",
+      "enabled": true
+    }
+  },
+  {
+    "name": "Maybach Roadster 2024",
+    "keycode": "MB2024",
+    "creationDate": "2023-11-21 13:06:29.743000",
+    "description": "SUV",
+    "enabled": true,
+    "idClient": {
+      "id": 2,
+      "name": "Mercedes Benz GmbH",
+      "shortName": "MB",
+      "enabled": true
+    }
+  },
+  {
+    "name": "Tiguan 2024",
+    "keycode": "TG2024",
+    "creationDate": "2023-11-21 13:13:08.572000",
+    "description": "SUV",
+    "enabled": true,
+    "idClient": {
+      "id": 3,
+      "name": "Volkswagen Group",
+      "shortName": "VW",
+      "enabled": true
+    }
+  },
+  {
+    "name": "Corvette Stingray 2024",
+    "keycode": "CS2024",
+    "creationDate": "2023-11-21 13:32:17.200000",
+    "description": "Sport",
+    "enabled": true,
+    "idClient": {
+      "id": 1,
+      "name": "General Motors",
+      "shortName": "GM",
+      "enabled": true
+    }
+  },
+  {
+    "name": "SLS 2024",
+    "keycode": "SS2024",
+    "creationDate": "2023-11-23 13:09:41.156000",
+    "description": "Sport",
+    "enabled": true,
+    "idClient": {
+      "id": 2,
+      "name": "Mercedes Benz GmbH",
+      "shortName": "MB",
+      "enabled": true
+    }
+  },
+  {
+    "name": "Carrera GT 2024",
+    "keycode": "GT2024",
+    "creationDate": "2023-11-23 13:17:58.044000",
+    "description": "Sport",
+    "enabled": true,
+    "idClient": {
+      "id": 3,
+      "name": "Volkswagen Group",
+      "shortName": "VW",
+      "enabled": true
+    }
+  }
+]
