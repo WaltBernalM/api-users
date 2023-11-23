@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.Field;
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 public class Utils {
@@ -123,5 +124,14 @@ public class Utils {
             return idAppRole;
         }
         return "";
+    }
+
+    public static void userCanCreate(Integer idApplication) throws AccessDeniedException {
+        Integer userAppAuthorityId = Utils.getUserAppAuthorityId();
+        if(!userAppAuthorityId.equals(idApplication)) {
+            System.out.println("Cannot create");
+            throw new AccessDeniedException("Unauthorized for resource creation");
+        }
+        System.out.println("Can create");
     }
 }
