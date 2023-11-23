@@ -10,5 +10,4 @@ import java.util.Optional;
 @Repository
 public interface UserApplicationRepository extends UserComposedRepository<UserApplication>{
     Optional<UserApplication> findOneByIdUserAndIdApplication(User user, Application application);
-    Optional<UserApplication> findOneByIdUser(User user);
 }
