@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -55,6 +56,17 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
 
             Integer applicationId = newUserDTO.getApplicationId();
             Optional<Application> applicationInDb = Utils.verifyExistence(applicationId, applicationRepository, Application.class);
+
+            if (profileInDb.isPresent() && applicationInDb.isPresent()) {
+                Application app = applicationInDb.get();
+                Profile profile = profileInDb.get();
+                if (!Objects.equals(app.getId(), profile.getIdApplication().getId())) {
+                    throw new BaseNotFoundException(
+                            Profile.class,
+                            "Profile with id " + profile.getId() + " is not related to Application with id " + app.getId()
+                    );
+                }
+            }
 
             if (userInDb.isEmpty()) {
                 User newUser = parseToUser(newUserDTO);
