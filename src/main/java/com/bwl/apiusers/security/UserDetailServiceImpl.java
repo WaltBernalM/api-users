@@ -95,7 +95,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             main.put(profile.getKeycode(), permissionByProfile);
         }
 
-        List<GrantedAuthority> userAuthorities = getUserAuthorities(main);
+        List<GrantedAuthority> userAuthorities = getUserAuthorities(main, idApplication);
 
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
 
@@ -108,7 +108,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return userDetails;
     }
 
-    private List<GrantedAuthority> getUserAuthorities(Map<String, Object> main) {
+    private List<GrantedAuthority> getUserAuthorities(Map<String, Object> main, Integer idApplication) {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         main.forEach((profileKeycode, permissions) -> {
@@ -122,6 +122,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 });
             }
         });
+        SimpleGrantedAuthority idAppAuthority = (new SimpleGrantedAuthority("ROLE_IDAPP" + idApplication));
+        authorities.add(idAppAuthority);
         System.out.println("Authorities from getUserAuthorities: " + authorities);
         return authorities;
     }
