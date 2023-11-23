@@ -8,12 +8,12 @@ import com.bwl.apiusers.repositories.UserComposedRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Utils {
     public static Sort.Direction getSortDirection(String direction) {
@@ -102,5 +102,21 @@ public class Utils {
 
     private static boolean isForeignKeyModel(Field field) {
         return !field.getType().isPrimitive() && !field.getType().isAssignableFrom(String.class);
+    }
+
+    private String getAppAuthority() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        System.out.println("authentication: "+ authorities);
+        if(!authorities.isEmpty()) {
+            String idAppRole = authorities
+                    .stream()
+                    .filter(authority -> authority.toString().contains("ROLE_IDAPP"))
+                    .toList()
+                    .get(0).toString()
+                    .replace("ROLE_","");
+            return idAppRole;
+        }
+        return "";
     }
 }
