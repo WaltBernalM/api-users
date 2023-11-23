@@ -13,6 +13,7 @@ public interface GenericReadController {
     public ResponseEntity<?> one(@PathVariable Integer id);
 
     @GetMapping("")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> all(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
