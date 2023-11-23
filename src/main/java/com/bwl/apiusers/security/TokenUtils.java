@@ -68,5 +68,13 @@ public class TokenUtils {
 
         return Collections.emptyList();
     }
+
+    public static Claims parseToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 }
 
