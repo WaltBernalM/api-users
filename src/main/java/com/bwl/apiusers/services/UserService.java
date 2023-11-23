@@ -94,6 +94,8 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             if (e instanceof BaseNotFoundException) {
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            } else if (e instanceof AccessDeniedException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
