@@ -1,0 +1,134 @@
+[
+  {
+    "idApplication": {
+      "id": 1,
+      "name": "App 1",
+      "description": "Application 1",
+      "keycode": "APP1"
+    },
+    "idProject": {
+      "id": 1,
+      "name": "Cheyenne 2024",
+      "keycode": "CH2024",
+      "creationDate": "2023-11-21 12:34:01.348000",
+      "description": "Pickup",
+      "enabled": true,
+      "idClient": {
+        "id": 1,
+        "name": "General Motors",
+        "shortName": "GM",
+        "enabled": true
+      }
+    }
+  },
+  {
+    "idApplication": {
+      "id": 1,
+      "name": "App 1",
+      "description": "Application 1",
+      "keycode": "APP1"
+    },
+    "idProject": {
+      "id": 2,
+      "name": "Maybach Roadster 2024",
+      "keycode": "MB2024",
+      "creationDate": "2023-11-21 13:06:29.743000",
+      "description": "SUV",
+      "enabled": true,
+      "idClient": {
+        "id": 2,
+        "name": "Mercedes Benz GmbH",
+        "shortName": "MB",
+        "enabled": true
+      }
+    }
+  },
+  {
+    "idApplication": {
+      "id": 1,
+      "name": "App 1",
+      "description": "Application 1",
+      "keycode": "APP1"
+    },
+    "idProject": {
+      "id": 3,
+      "name": "Tiguan 2024",
+      "keycode": "TG2024",
+      "creationDate": "2023-11-21 13:13:08.572000",
+      "description": "SUV",
+      "enabled": true,
+      "idClient": {
+        "id": 3,
+        "name": "Volkswagen Group",
+        "shortName": "VW",
+        "enabled": true
+      }
+    }
+  },
+  {
+    "idApplication": {
+      "id": 2,
+      "name": "App 2",
+      "description": "Application 2",
+      "keycode": "APP2"
+    },
+    "idProject": {
+      "id": 4,
+      "name": "Corvette Stingray 2024",
+      "keycode": "CS2024",
+      "creationDate": "2023-11-21 13:32:17.200000",
+      "description": "Sport",
+      "enabled": true,
+      "idClient": {
+        "id": 1,
+        "name": "General Motors",
+        "shortName": "GM",
+        "enabled": true
+      }
+    }
+  },
+  {
+    "idApplication": {
+      "id": 2,
+      "name": "App 2",
+      "description": "Application 2",
+      "keycode": "APP2"
+    },
+    "idProject": {
+      "id": 5,
+      "name": "SLS 2024",
+      "keycode": "SS2024",
+      "creationDate": "2023-11-23 13:09:41.156000",
+      "description": "Sport",
+      "enabled": true,
+      "idClient": {
+        "id": 2,
+        "name": "Mercedes Benz GmbH",
+        "shortName": "MB",
+        "enabled": true
+      }
+    }
+  },
+  {
+    "idApplication": {
+      "id": 2,
+      "name": "App 2",
+      "description": "Application 2",
+      "keycode": "APP2"
+    },
+    "idProject": {
+      "id": 6,
+      "name": "Carrera GT 2024",
+      "keycode": "GT2024",
+      "creationDate": "2023-11-23 13:17:58.044000",
+      "description": "Sport",
+      "enabled": true,
+      "idClient": {
+        "id": 3,
+        "name": "Volkswagen Group",
+        "shortName": "VW",
+        "enabled": true
+      }
+    }
+  }
+]
