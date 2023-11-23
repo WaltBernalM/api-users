@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.lang.reflect.Field;
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Service
@@ -48,6 +49,9 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
     public ResponseEntity<?> newUserSignup(@RequestBody NewUserDTO newUserDTO) {
         try {
             String newUserDTOUserName = newUserDTO.getUsername();
+
+            userCanCreate(newUserDTO.getApplicationId());
+
             Optional<User> userInDb = userRepository.findOneByUsername(newUserDTOUserName);
 
             Integer profileId = newUserDTO.getProfileId();
@@ -117,6 +121,9 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             User userInDb = userRepository.findById(id)
                     .orElseThrow(() -> new BaseNotFoundException(User.class, "id not found in database"));
 
+            // Verify if user accessing can edit the resource
+            userCanEdit(userInDb);
+
             // Verify if userName is already taken
             String updateUserDTOUserName = updateUserDTO.getUsername();
             List<User> usernamesInDb = userRepository.findAllByUsername(updateUserDTOUserName);
@@ -178,6 +185,8 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             if (e instanceof BaseNotFoundException) {
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            } else if (e instanceof AccessDeniedException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -187,6 +196,9 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
         try {
             User userToDelete = userRepository.findById(id)
                     .orElseThrow(() -> new BaseNotFoundException(User.class, "id was not found in database"));
+
+            // Verify if user accessing can edit the resource
+            userCanEdit(userToDelete);
 
             // Delete UserProfiles related to User
             Utils.deleteUserComposedEntities(userProfileRepository, userToDelete);
@@ -206,6 +218,8 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             if (e instanceof BaseNotFoundException) {
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            } else if (e instanceof AccessDeniedException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -251,5 +265,25 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
         userApplication.setIdUser(user);
         userApplication.setIdApplication(application);
         userApplicationRepository.save(userApplication);
+    }
+
+    private void userCanEdit(User userInDb) throws AccessDeniedException {
+        Integer userAppAuthorityId = Utils.getUserAppAuthorityId();
+        UserApplication userApp = userApplicationRepository.findOneByIdUser(userInDb)
+                .orElseThrow(() -> new BaseNotFoundException(User.class, "User not related to any application"));
+        if (!userAppAuthorityId.equals(userApp.getIdApplication().getId())) {
+            System.out.println("Cannot edit");
+            throw new AccessDeniedException("Resource not available for modification");
+        }
+        System.out.println("Can edit");
+    }
+
+    private void userCanCreate(Integer idApplication) throws AccessDeniedException {
+        Integer userAppAuthorityId = Utils.getUserAppAuthorityId();
+        if(!userAppAuthorityId.equals(idApplication)) {
+            System.out.println("Cannot create");
+            throw new AccessDeniedException("Unauthorized for resource creation");
+        }
+        System.out.println("Can create");
     }
 }
