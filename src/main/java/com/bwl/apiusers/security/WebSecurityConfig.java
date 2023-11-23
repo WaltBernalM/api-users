@@ -1,5 +1,6 @@
 package com.bwl.apiusers.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,6 +49,15 @@ public class WebSecurityConfig {
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logoutConfigurer ->
+                        logoutConfigurer
+                                .logoutUrl("/logout")
+                                .logoutSuccessHandler((request, response, authentication) -> {
+                                    jwtAuthorizationFilter.invalidateToken(request);
+                                    response.setStatus(HttpServletResponse.SC_OK);
+                                })
+                )
+                .httpBasic().disable()
                 .build();
     }
 
