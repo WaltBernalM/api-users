@@ -104,7 +104,12 @@ public class Utils {
         return !field.getType().isPrimitive() && !field.getType().isAssignableFrom(String.class);
     }
 
-    public static String getUserAppAuthority() {
+    public static Integer getUserAppAuthorityId() {
+        String userAppAuthority = getUserAppAuthority();
+        return Integer.valueOf(userAppAuthority.replace("IDAPP", ""));
+    }
+
+    private static String getUserAppAuthority() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         System.out.println("authentication: "+ authorities);
