@@ -1,7 +1,5 @@
 package com.bwl.apiusers.exceptions;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
-
 public class BaseNotFoundException extends RuntimeException {
     public BaseNotFoundException(Class<?> entityType, Integer id) {
         super("Could not find " + entityType.getSimpleName() + " with id: " + id);
