@@ -236,9 +236,7 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
         ApplicationProject appProject = applicationProjectRepository.findOneByIdProject(projectInDb)
                 .orElseThrow(() -> new BaseNotFoundException(User.class, "Project not related to any application"));
         if (!userAppAuthorityId.equals(appProject.getIdApplication().getId())) {
-            System.out.println("Cannot edit");
             throw new AccessDeniedException("Resource not available for modification");
         }
-        System.out.println("Can edit");
     }
 }
