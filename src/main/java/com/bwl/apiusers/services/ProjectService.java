@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.lang.reflect.Field;
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Service
@@ -81,6 +82,8 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             if (e instanceof BaseNotFoundException) {
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            } else if (e instanceof AccessDeniedException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -106,6 +109,8 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
         try {
             Project projectInDb = projectRepository.findById(id)
                     .orElseThrow(() -> new BaseNotFoundException(Project.class, "id not found in database"));
+
+            userCanModify(projectInDb);
 
             // Verify if Keycode already taken
             String updateDTOKeycode = updateProjectDTO.getKeycode();
@@ -173,6 +178,8 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             if (e instanceof BaseNotFoundException) {
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            } else if (e instanceof AccessDeniedException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -182,6 +189,8 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
         try {
             Project  projectToDelete = projectRepository.findById(id)
                     .orElseThrow(() -> new BaseNotFoundException(Project.class, "id not found in database"));
+
+            userCanModify(projectToDelete);
 
             // Delete all ApplicationProject row related to Project
             List<ApplicationProject> applicationProjectsRelated = applicationProjectRepository.findAllByIdProject(projectToDelete);
@@ -196,6 +205,8 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             if (e instanceof BaseNotFoundException) {
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            } else if (e instanceof AccessDeniedException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -218,5 +229,16 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
         newApplicationProjectRow.setIdApplication(application);
         newApplicationProjectRow.setIdProject(project);
         applicationProjectRepository.save(newApplicationProjectRow);
+    }
+
+    private void userCanModify(Project projectInDb) throws AccessDeniedException {
+        Integer userAppAuthorityId = Utils.getUserAppAuthorityId();
+        ApplicationProject appProject = applicationProjectRepository.findOneByIdProject(projectInDb)
+                .orElseThrow(() -> new BaseNotFoundException(User.class, "Project not related to any application"));
+        if (!userAppAuthorityId.equals(appProject.getIdApplication().getId())) {
+            System.out.println("Cannot edit");
+            throw new AccessDeniedException("Resource not available for modification");
+        }
+        System.out.println("Can edit");
     }
 }
