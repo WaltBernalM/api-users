@@ -14,5 +14,5 @@ import java.util.Optional;
 @NoRepositoryBean
 public interface UserComposedRepository<T> extends JpaRepository<T, Integer> {
     List<T> findAllByIdUser(User idUser);
-    Optional<UserApplication> findOneByIdUser(User user);
+    Optional<T> findOneByIdUser(User user);
 }
