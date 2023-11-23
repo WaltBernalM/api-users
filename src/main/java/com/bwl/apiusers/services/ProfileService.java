@@ -27,8 +27,11 @@ public class ProfileService extends GenericReadService<Profile, ProfileDTO, Prof
             EntityModel<ProfileDTO> entityModel = getAssembler().toModel(dto);
             return ResponseEntity.ok(entityModel);
         } catch (Exception e) {
-            ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorresponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

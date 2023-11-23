@@ -75,7 +75,10 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
 
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -87,8 +90,11 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
             EntityModel<ProjectDTO> entityModel = assembler.toModel(dto);
             return ResponseEntity.ok(entityModel);
         } catch( Exception e) {
-            ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorresponse, HttpStatus.BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -160,8 +166,11 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
             response.put("data", body);
             return new ResponseEntity<>(response, HttpStatus.OK) ;
         } catch (Exception e) {
-            ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorresponse, HttpStatus.BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -181,7 +190,10 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         } catch(Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

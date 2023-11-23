@@ -43,8 +43,11 @@ public class GenericReadService <T, D, R extends BaseRepository<T>, M extends Ba
             EntityModel<T> entityModel = assembler.toModel(entity);
             return ResponseEntity.ok(entityModel);
         } catch (Exception e) {
-            ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorresponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

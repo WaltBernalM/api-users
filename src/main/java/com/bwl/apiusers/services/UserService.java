@@ -76,6 +76,9 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
 
         } catch(Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -89,8 +92,11 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
 
             return ResponseEntity.ok(entityModel);
         } catch (Exception e) {
-            ErrorResponse errorresponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorresponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -159,7 +165,10 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -184,7 +193,10 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         } catch(Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            if (e instanceof BaseNotFoundException) {
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
