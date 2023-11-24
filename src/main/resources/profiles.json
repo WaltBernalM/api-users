@@ -2,7 +2,7 @@
   {
     "name": "Developer",
     "description": "Software Developer",
-    "keycode": "DEV",
+    "keycode": "DEV1",
     "idApplication": {
       "id": 1,
       "name": "App 1",
@@ -13,7 +13,7 @@
   {
     "name": "Tester",
     "description": "Software Tester",
-    "keycode": "TEST",
+    "keycode": "TEST1",
     "idApplication": {
       "id": 1,
       "name": "App 1",
@@ -24,7 +24,7 @@
   {
     "name": "Designer",
     "description": "UX/UI Designer",
-    "keycode": "DES",
+    "keycode": "DES1",
     "idApplication": {
       "id": 1,
       "name": "App 1",
@@ -35,7 +35,7 @@
   {
     "name": "Project Manager",
     "description": "Project Manager",
-    "keycode": "PM",
+    "keycode": "PM1",
     "idApplication": {
       "id": 1,
       "name": "App 1",
@@ -46,7 +46,7 @@
   {
     "name": "Developer",
     "description": "Software Developer",
-    "keycode": "DEV",
+    "keycode": "DEV2",
     "idApplication": {
       "id": 2,
       "name": "App 2",
@@ -57,7 +57,7 @@
   {
     "name": "Tester",
     "description": "Software Tester",
-    "keycode": "TEST",
+    "keycode": "TEST2",
     "idApplication": {
       "id": 2,
       "name": "App 2",
@@ -68,7 +68,7 @@
   {
     "name": "Designer",
     "description": "UX/UI Designer",
-    "keycode": "DES",
+    "keycode": "DES2",
     "idApplication": {
       "id": 2,
       "name": "App 2",
@@ -79,7 +79,7 @@
   {
     "name": "Project Manager",
     "description": "Project Manager",
-    "keycode": "PM",
+    "keycode": "PM2",
     "idApplication": {
       "id": 2,
       "name": "App 2",
@@ -90,7 +90,7 @@
   {
     "name": "Account Manager",
     "description": "Account Manager",
-    "keycode": "AM",
+    "keycode": "AM1",
     "idApplication": {
       "id": 1,
       "name": "App 1",
@@ -101,7 +101,7 @@
   {
     "name": "Account Manager",
     "description": "Account Manager",
-    "keycode": "AM",
+    "keycode": "AM2",
     "idApplication": {
       "id": 2,
       "name": "App 2",
