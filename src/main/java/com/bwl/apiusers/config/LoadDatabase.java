@@ -43,22 +43,22 @@ public class LoadDatabase implements Loader {
             UserProfileRepository userProfileRepository) {
 
         TypeReference<List<Client>> clientTypeReference = new TypeReference<List<Client>>() {};
-        jsonParser(clientRepository, clientTypeReference, clients, "clients.json");
+        jsonBaseModelParser(clientRepository, clientTypeReference, clients, "clients.json");
 
         TypeReference<List<Project>> projectTypeReference = new TypeReference<List<Project>>() {};
-        jsonParser(projectRepository, projectTypeReference, projects,"projects.json");
+        jsonBaseModelParser(projectRepository, projectTypeReference, projects,"projects.json");
 
         TypeReference<List<Application>> applicationTypeReference = new TypeReference<List<Application>>() {};
-        jsonParser(applicationRepository, applicationTypeReference, applications, "applications.json");
+        jsonBaseModelParser(applicationRepository, applicationTypeReference, applications, "applications.json");
 
         TypeReference<List<Profile>> profileTypeReference = new TypeReference<List<Profile>>() {};
-        jsonParser(profileRepository, profileTypeReference, profiles, "profiles.json");
+        jsonBaseModelParser(profileRepository, profileTypeReference, profiles, "profiles.json");
 
         TypeReference<List<Permission>> permissionTypeReference = new TypeReference<List<Permission>>() {};
-        jsonParser(permissionRepository, permissionTypeReference, permissions, "permissions.json");
+        jsonBaseModelParser(permissionRepository, permissionTypeReference, permissions, "permissions.json");
 
         TypeReference<List<User>> userTypeReference = new TypeReference<List<User>>() {};
-        jsonParser(userRepository, userTypeReference, users, "users.json");
+        jsonBaseModelParser(userRepository, userTypeReference, users, "users.json");
 
         return args -> {
             clientRepository.findAll().forEach(client -> log.info("Preloaded Client: " + client.getShortName()));

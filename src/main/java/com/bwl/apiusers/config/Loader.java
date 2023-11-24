@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public interface Loader {
-    default <T extends BaseModel, ID> void jsonParser(
+    default <T extends BaseModel, ID> void jsonBaseModelParser(
             JpaRepository<T, ID> repository,
             TypeReference<List<T>> targTypeReference,
             List<T> dataToSave,
