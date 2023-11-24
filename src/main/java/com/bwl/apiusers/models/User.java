@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name="USERS")
-public class User {
+public class User implements BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

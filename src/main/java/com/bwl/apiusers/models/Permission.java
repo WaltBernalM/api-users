@@ -6,7 +6,7 @@ import lombok.Data;
 @Table(name="PERMISSIONS")
 @Data
 @Entity
-public class Permission {
+public class Permission implements BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
