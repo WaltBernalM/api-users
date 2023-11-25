@@ -6,7 +6,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "PROFILES_PERMISSIONS")
-public class ProfilePermission {
+public class ProfilePermission implements ComposedModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -6,7 +6,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "APPLICATIONS_PROJECTS")
-public class ApplicationProject {
+public class ApplicationProject implements ComposedModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
