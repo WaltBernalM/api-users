@@ -1,6 +1,5 @@
 package com.bwl.apiusers.config;
 
-import com.bwl.apiusers.dtos.ProjectDTO;
 import com.bwl.apiusers.models.*;
 import com.bwl.apiusers.repositories.*;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,16 +16,16 @@ import java.util.List;
 public class LoadDatabase implements Loader {
     private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
-    private List<Client> clients = new ArrayList<>();
-    private List<Project> projects = new ArrayList<>();
-    private List<Application> applications = new ArrayList<>();
-    private List<ApplicationProject> applicationProjects = new ArrayList<>();
-    private List<Profile> profiles = new ArrayList<>();
-    private List<Permission> permissions = new ArrayList<>();
-    private List<ProfilePermission> profilePermissions = new ArrayList<>();
-    private List<User> users = new ArrayList<>();
-    private List<UserApplication> userApplications = new ArrayList<>();
-    private List<UserProfile> userProfiles = new ArrayList<>();
+    private final List<Client> clients = new ArrayList<>();
+    private final List<Project> projects = new ArrayList<>();
+    private final List<Application> applications = new ArrayList<>();
+    private final List<ApplicationProject> applicationProjects = new ArrayList<>();
+    private final List<Profile> profiles = new ArrayList<>();
+    private final List<Permission> permissions = new ArrayList<>();
+    private final List<ProfilePermission> profilePermissions = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
+    private final List<UserApplication> userApplications = new ArrayList<>();
+    private final List<UserProfile> userProfiles = new ArrayList<>();
 
     @Bean
     @Override
