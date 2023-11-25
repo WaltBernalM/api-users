@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "idUser": {
       "id": 1,
       "email": "ebernal@bwl.com.mx",
@@ -28,6 +29,7 @@
     }
   },
   {
+    "id": 2,
     "idUser": {
       "id": 2,
       "email": "wbernal@bwl.com.mx",
@@ -56,6 +58,7 @@
     }
   },
   {
+    "id": 3,
     "idUser": {
       "id": 3,
       "email": "emontero@bwl.com.mx",

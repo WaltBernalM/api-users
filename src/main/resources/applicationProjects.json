@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "idApplication": {
       "id": 1,
       "name": "App 1",
@@ -22,6 +23,7 @@
     }
   },
   {
+    "id": 2,
     "idApplication": {
       "id": 1,
       "name": "App 1",
@@ -44,6 +46,7 @@
     }
   },
   {
+    "id": 3,
     "idApplication": {
       "id": 1,
       "name": "App 1",
@@ -66,6 +69,7 @@
     }
   },
   {
+    "id": 4,
     "idApplication": {
       "id": 2,
       "name": "App 2",
@@ -88,6 +92,7 @@
     }
   },
   {
+    "id": 5,
     "idApplication": {
       "id": 2,
       "name": "App 2",
@@ -110,6 +115,7 @@
     }
   },
   {
+    "id": 6,
     "idApplication": {
       "id": 2,
       "name": "App 2",
