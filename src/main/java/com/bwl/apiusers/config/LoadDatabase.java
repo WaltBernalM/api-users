@@ -60,6 +60,18 @@ public class LoadDatabase implements Loader {
         TypeReference<List<User>> userTypeReference = new TypeReference<List<User>>() {};
         jsonBaseModelParser(userRepository, userTypeReference, users, "users.json");
 
+        TypeReference<List<UserApplication>> userApplicationTypeReference = new TypeReference<List<UserApplication>>() {};
+        jsonComposedModelParser(userApplicationRepository, userApplicationTypeReference, userApplications, "userApplications.json");
+
+        TypeReference<List<ProfilePermission>> profilePermissionTypeReference = new TypeReference<List<ProfilePermission>>() {};
+        jsonComposedModelParser(profilePermissionRepository, profilePermissionTypeReference, profilePermissions, "profilePermissions.json");
+
+        TypeReference<List<UserProfile>> userProfileTypeReference = new TypeReference<List<UserProfile>>() {};
+        jsonComposedModelParser(userProfileRepository, userProfileTypeReference, userProfiles, "userProfiles.json");
+
+        TypeReference<List<ApplicationProject>> applicationProjectTypeReference = new TypeReference<List<ApplicationProject>>() {};
+        jsonComposedModelParser(applicationProjectRepository, applicationProjectTypeReference, applicationProjects, "applicationProjects.json");
+
         return args -> {
             clientRepository.findAll().forEach(client -> log.info("Preloaded Client: " + client.getShortName()));
             projectRepository.findAll().forEach(project -> log.info("Preloaded Project: " + project.getKeycode()));
@@ -67,6 +79,10 @@ public class LoadDatabase implements Loader {
             profileRepository.findAll().forEach(profile -> log.info("Preloaded Profile: " + profile.getKeycode()));
             permissionRepository.findAll().forEach(permission -> log.info("Preloaded Permission: " + permission.getKeycode()));
             userRepository.findAll().forEach(user -> log.info("Preloaded User: " + user.getUsername()));
+            userApplicationRepository.findAll().forEach(userApp -> log.info("Preloaded UserApplication: " + userApp));
+            profilePermissionRepository.findAll().forEach(profilePermission -> log.info("Preloaded ProfilePermission: " + profilePermission));
+            userProfileRepository.findAll().forEach(userProfile -> log.info("Preloaded UserProfile: " + userProfile));
+            applicationProjectRepository.findAll().forEach(applicationProject -> log.info("Preloaded ApplicationProject: " + applicationProject));
         };
     }
  }
