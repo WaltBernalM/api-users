@@ -1,9 +1,7 @@
 package com.bwl.apiusers.config;
 
-import com.bwl.apiusers.dtos.DTO;
 import com.bwl.apiusers.models.*;
 import com.bwl.apiusers.repositories.*;
-import com.bwl.apiusers.utils.Utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +40,6 @@ public interface Loader {
                     targTypeReference
             );
 
-//            repository.saveAll(dataToSave);
             // Parse the map of the dataInRepo
             Map<String, T> dataInRepo = new HashMap<>();
             repository.findAll().forEach(item -> {
@@ -69,6 +66,47 @@ public interface Loader {
                     if(!dataInRepo.containsKey(itemToSave.getKeycode())){
                         nonDuplicates.add(itemToSave);
                     }
+                }
+            });
+            repository.saveAll(nonDuplicates);
+        } catch (Exception e) {
+            log.error("Error in loader ", e);
+        }
+    }
+
+    default <T extends ComposedModel, ID> void jsonComposedModelParser(
+            JpaRepository<T, ID> repository,
+            TypeReference<List<T>> targTypeReference,
+            List<T> dataToSave,
+            String fileResource) {
+        Logger log = LoggerFactory.getLogger(LoadDatabase.class);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+            objectMapper.setDateFormat(dateFormat);
+
+            objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+            Resource resource = new ClassPathResource(fileResource);
+            dataToSave = objectMapper.readValue(
+                    resource.getInputStream(),
+                    targTypeReference
+            );
+
+            // Parse the map of the dataInRepo
+            Map<Integer, T> dataInRepo = new HashMap<>();
+            repository.findAll().forEach(item -> {
+                dataInRepo.put(item.getId(), item);
+            });
+
+            // Set list of non duplicates
+            List<T> nonDuplicates = new ArrayList<>();
+            dataToSave.forEach(itemToSave -> {
+                if(!dataInRepo.containsKey(itemToSave.getId())) {
+                    nonDuplicates.add(itemToSave);
                 }
             });
             repository.saveAll(nonDuplicates);
