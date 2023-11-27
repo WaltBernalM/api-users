@@ -60,14 +60,7 @@ public class GenericReadService <T, D, R extends BaseRepository<T>, M extends Ba
         try {
             List<Sort.Order> orders = new ArrayList<>();
 
-            if(sort[0].contains(",")) {
-                for(String sortOrder : sort) {
-                    String[] _sort = sortOrder.split(",");
-                    orders.add(new Sort.Order(Utils.getSortDirection(_sort[1]), sort[0]));
-                }
-            } else {
-                orders.add(new Sort.Order(Utils.getSortDirection(sort[1]), sort[0]));
-            }
+            getOrders(sort, orders);
 
             List<T> entities = new ArrayList<>();
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
@@ -93,5 +86,16 @@ public class GenericReadService <T, D, R extends BaseRepository<T>, M extends Ba
             }
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private void getOrders(String[] sort, List<Sort.Order> orders) {
+        if(sort[0].contains(",")) {
+            for(String sortOrder : sort) {
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Sort.Order(Utils.getSortDirection(_sort[1]), sort[0]));
+            }
+            return;
+        }
+        orders.add(new Sort.Order(Utils.getSortDirection(sort[1]), sort[0]));
     }
 }
