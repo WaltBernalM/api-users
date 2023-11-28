@@ -10,7 +10,6 @@ The API has authentication and authorization through several endpoints, also tha
 
 ### API main endpoints:
 ```
-/signup
 /login
 /logout
 /api
@@ -23,7 +22,7 @@ Then you'll need to run the ApiUsersApplication.java main class with:
 $ ./mvnw spring-boot:run --quiet
 ```
 
-## Endpoints
+## Access
 To start working and exploring the endpoints, you can post a login with the following JSON body:
 
 ```json
@@ -59,9 +58,11 @@ You will receive a response as follows, with a Json Web Token, that you'll have 
 }
 ```
 
-### `GET /api/applications`  -- READ
+## API Endpoints
+### Applications
+#### `GET /api/applications`  -- READ
 Allows to obtain information of all applications. This endpoint can have queries, so as respond with pagination if needed.
-#### Request
+##### Request
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 - **Queries available**:
   - name: `/api/applications?name=App 2`
@@ -69,7 +70,7 @@ Allows to obtain information of all applications. This endpoint can have queries
   - page: `/api/applications?page=0`
   - sort: `/api/applications?sort=id,asc`
 
-#### Response 
+##### Response 
 Without pagination:
 ```json
 {
@@ -113,14 +114,89 @@ With pagination (size must be queried):
 }
 ```
 
-### `GET /api/applications/1`  -- READ
+#### `GET /api/applications/1`  -- READ
 Allows to obtain information of only one application. This endpoint can have queries, so as respond with pagination if needed.
-#### Request
+##### Request
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 
-#### Response
+##### Response
 ```json
 {
-  
+  "id": 2,
+  "name": "App 2",
+  "description": "Application 2",
+  "keycode": "APP2"
 }
 ```
+
+### Permissions
+#### `GET /api/permissions`  -- READ
+Allows to obtain information of all permissions. This endpoint can have queries, so as respond with pagination if needed.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+- **Queries available**:
+  - name: `/api/permissions?name=Root`
+  - size: `/api/permissions?size=1`
+  - page: `/api/permissions?page=0`
+  - sort: `/api/permissions?sort=id,asc`
+
+##### Response
+Without pagination:
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Root",
+      "description": "Full CRUD",
+      "keycode": "ROOT"
+    },
+    {
+      "id": 2,
+      "name": "Administrator",
+      "description": "Access to CRU",
+      "keycode": "ADMIN"
+    },
+    {
+      "id": 3,
+      "name": "User",
+      "description": "Read only access",
+      "keycode": "USER"
+    }
+  ]
+}
+```
+
+With pagination (size must be queried):
+```json
+{
+  "totalItems": 3,
+  "data": [
+    {
+      "id": 1,
+      "name": "Root",
+      "description": "Full CRUD",
+      "keycode": "ROOT"
+    }
+  ],
+  "totalPages": 3,
+  "currentPage": 0
+}
+```
+
+#### `GET /api/permissions/1`  -- READ
+Allows to obtain information of only one permission. This endpoint can have queries, so as respond with pagination if needed.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+
+##### Response
+```json
+{
+  "id": 3,
+  "name": "User",
+  "description": "Read only access",
+  "keycode": "USER"
+}
+```
+
+
