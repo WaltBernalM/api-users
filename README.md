@@ -28,7 +28,7 @@ To start working and exploring the endpoints, you can post a login with the foll
 ```json
 {
   "username":"john117",
-  "password":"#Bemw930628",
+  "password":"#Password",
   "idApplication": 2
 }
 ```
@@ -81,6 +81,7 @@ Allows to obtain information of all applications. This endpoint can have queries
   - sort: `/api/applications?sort=id,asc`
 
 ##### Response 
+- **Status Code**: 200 OK
 Without pagination:
 ```json
 {
@@ -130,6 +131,7 @@ Allows to obtain information of only one application.
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 
 ##### Response
+- **Status Code**: 200 OK
 ```json
 {
   "id": 2,
@@ -151,6 +153,7 @@ Allows to obtain information of all permissions. This endpoint can have queries,
   - sort: `/api/permissions?sort=id,asc`
 
 ##### Response
+- **Status Code**: 200 OK
 Without pagination:
 ```json
 {
@@ -200,6 +203,7 @@ Allows to obtain information of only one permission.
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 
 ##### Response
+- **Status Code**: 200 OK
 ```json
 {
   "id": 3,
@@ -221,6 +225,7 @@ Allows to obtain information of all profiles. This endpoint can have queries, so
   - sort: `/api/profiles?sort=id,asc`
 
 ##### Response
+- **Status Code**: 200 OK
 Without pagination:
 ```json
 {
@@ -312,6 +317,7 @@ Allows to obtain information of only one profile.
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 
 ##### Response
+- **Status Code**: 200 OK
 ```json
 {
   "id": 10,
@@ -333,6 +339,7 @@ Allows to obtain information of all users. This endpoint can have queries, so as
   - sort: `/api/users?sort=id,asc`
 
 ##### Response
+- **Status Code**: 200 OK
 Without pagination:
 ```json
 {
@@ -388,6 +395,7 @@ Allows to obtain information of only one user.
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 
 ##### Response
+- **Status Code**: 200 OK
 ```json
 {
   "id": 2,
@@ -396,3 +404,68 @@ Allows to obtain information of only one user.
   "username": "cantseeme2"
 }
 ```
+
+#### `POST /api/users` -- CREATE
+Allows to create one user.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+```json
+{
+    "email":"test@bwl.com.mx",
+    "name":"test user",
+    "username":"testuser",
+    "profileId": 1,
+    "applicationId": 1,
+    "password":"#Password"
+}
+```
+
+##### Response
+- **Status Code**: 201 Created
+```json
+{
+    "data": {
+        "idProfile": 5,
+        "idApplication": 2,
+        "user": {
+            "id": 5,
+            "name": "delete user",
+            "email": "delete@bwl.com.mx",
+            "username": "cantsefgerbeteme"
+        }
+    }
+}
+```
+
+### `PATCH /api/users/:userId` -- UPDATE
+Allows the update and modification of a user.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+- **Status Code**: 200 OK
+```json
+{
+    "username": "cantseeme2"
+}
+```
+
+##### Response
+```json
+{
+  "data": {
+    "user": {
+      "id": 2,
+      "name": "Walter Bernal",
+      "email": "wbernal@bwl.com.mx",
+      "username": "cantseeme2"
+    }
+  }
+}
+```
+
+### `DELETE /api/users/:userId` -- DELETE
+Allows the deletion of a user.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with a valid Authentication Bearer Token (provided at login) to authenticate the request.
+
+##### Response
+- **Status Code**: 204 No Content
