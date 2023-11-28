@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 public interface GenericCRUDController<N, U> extends GenericReadController {
 
-    @PostMapping("/signup")
+    @PostMapping("")
     @PreAuthorize("hasRole('ROOT')")
     public ResponseEntity<?> postNew(@RequestBody N newEntityDTO);
 
