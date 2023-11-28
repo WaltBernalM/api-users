@@ -70,7 +70,7 @@ public class Utils {
             }
             return dto;
         } catch (Exception e) {
-            throw new RuntimeException("Error converting entity to DTO");
+            throw new RuntimeException("Error converting entity to DTO", e);
         }
     }
 
@@ -129,9 +129,7 @@ public class Utils {
     public static void userCanCreate(Integer idApplication) throws AccessDeniedException {
         Integer userAppAuthorityId = getUserAppAuthorityId();
         if(!userAppAuthorityId.equals(idApplication)) {
-            System.out.println("Cannot create");
             throw new AccessDeniedException("Unauthorized for resource creation");
         }
-        System.out.println("Can create");
     }
 }
