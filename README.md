@@ -58,6 +58,16 @@ You will receive a response as follows, with a Json Web Token, that you'll have 
 }
 ```
 
+### Authorization by role
+The user you're about to login has rights to perform some changes in the data, below you can find the explanation of each.
+This authorization by role is performed with an endpoint pre-authorization check.
+
+|       | POST | GET | PATCH | DELETE | 
+|-------|------|-----|-------|--------|
+| USER  |      | X   |       |        |
+| ADMIN |      | X   | X     |        |     
+| ROOT  | X    | X   | X     | X      |
+
 ## API Endpoints
 ### Applications
 #### `GET /api/applications`  -- READ
@@ -95,7 +105,7 @@ Without pagination:
 }
 ```
 
-With pagination (size must be queried):
+With pagination - `GET /api/applications?size=1`:
 ```json
 {
   "totalItems": 2,
@@ -114,8 +124,8 @@ With pagination (size must be queried):
 }
 ```
 
-#### `GET /api/applications/1`  -- READ
-Allows to obtain information of only one application. This endpoint can have queries, so as respond with pagination if needed.
+#### `GET /api/applications/:applicationId`  -- READ
+Allows to obtain information of only one application.
 ##### Request
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 
@@ -167,7 +177,7 @@ Without pagination:
 }
 ```
 
-With pagination (size must be queried):
+With pagination - `GET /api/permissions?size=1`:
 ```json
 {
   "totalItems": 3,
@@ -184,8 +194,8 @@ With pagination (size must be queried):
 }
 ```
 
-#### `GET /api/permissions/1`  -- READ
-Allows to obtain information of only one permission. This endpoint can have queries, so as respond with pagination if needed.
+#### `GET /api/permissions/:permissionId`  -- READ
+Allows to obtain information of only one permission.
 ##### Request
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 
@@ -199,4 +209,89 @@ Allows to obtain information of only one permission. This endpoint can have quer
 }
 ```
 
+### Users
+#### `GET /api/users`  -- READ
+Allows to obtain information of all users. This endpoint can have queries, so as respond with pagination if needed.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+- **Queries available**:
+  - name: `/api/users?name=Root`
+  - size: `/api/users?size=1`
+  - page: `/api/users?page=0`
+  - sort: `/api/users?sort=id,asc`
 
+##### Response
+Without pagination:
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Eli Bernal",
+      "email": "ebernal@bwl.com.mx",
+      "username": "ebernal"
+    },
+    {
+      "id": 2,
+      "name": "Walter Bernal",
+      "email": "wbernal@bwl.com.mx",
+      "username": "cantseeme2"
+    },
+    {
+      "id": 3,
+      "name": "John Spartan",
+      "email": "emontero@bwl.com.mx",
+      "username": "john117"
+    },
+    {
+      "id": 4,
+      "name": "Walter Bernal",
+      "email": "wbernal@bwl.com.mx",
+      "username": "wbernal"
+    }
+  ]
+}
+```
+
+With pagination - `GET /api/users?size=1`:
+```json
+{
+  "totalItems": 4,
+  "data": [
+    {
+      "id": 1,
+      "name": "Eli Bernal",
+      "email": "ebernal@bwl.com.mx",
+      "username": "ebernal"
+    }
+  ],
+  "totalPages": 4,
+  "currentPage": 0
+}
+```
+
+#### `GET /api/users/:userId`  -- READ
+Allows to obtain information of only one user.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+
+##### Response
+```json
+{
+  "id": 2,
+  "name": "Walter Bernal",
+  "email": "wbernal@bwl.com.mx",
+  "username": "cantseeme2"
+}
+```
+
+### Profiles
+#### `GET /api/profiles`  -- READ
+Allows to obtain information of all profiles. This endpoint can have queries, so as respond with pagination if needed.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+- **Queries available**:
+  - name: `/api/profiles?name=Root`
+  - size: `/api/profiles?size=1`
+  - page: `/api/profiles?page=0`
+  - sort: `/api/profiles?sort=id,asc`
