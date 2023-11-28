@@ -154,6 +154,7 @@ Allows to obtain information of all permissions. This endpoint can have queries,
 
 ##### Response
 - **Status Code**: 200 OK
+
 Without pagination:
 ```json
 {
@@ -226,6 +227,7 @@ Allows to obtain information of all profiles. This endpoint can have queries, so
 
 ##### Response
 - **Status Code**: 200 OK
+
 Without pagination:
 ```json
 {
@@ -340,6 +342,7 @@ Allows to obtain information of all users. This endpoint can have queries, so as
 
 ##### Response
 - **Status Code**: 200 OK
+
 Without pagination:
 ```json
 {
@@ -481,6 +484,7 @@ Allows to obtain information of all clients. This endpoint can have queries, so 
   - sort: `/api/users?sort=id,asc`
 ##### Response
 - **Status Code**: 200 OK
+
 Without pagination:
 ```json
 {
