@@ -51,7 +51,8 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
                 Client savedClient = clientRepository.save(newClient);
 
                 Map<String, Object> body = new HashMap<>();
-                body.put("client", savedClient);
+                ClientDTO dto = Utils.convertToDTO(savedClient, ClientDTO.class);
+                body.put("client", dto);
 
                 Map<String, Object> response = new HashMap<>();
                 response.put("data", body);
@@ -103,7 +104,8 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
 
             Client updatedClient = clientRepository.save(clientInDb);
             Map<String, Object> body = new HashMap<>();
-            body.put("client", updatedClient);
+            ClientDTO dto = Utils.convertToDTO(updatedClient, ClientDTO.class);
+            body.put("client", dto);
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", body);
