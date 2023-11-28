@@ -209,6 +209,118 @@ Allows to obtain information of only one permission.
 }
 ```
 
+### Profiles
+#### `GET /api/profiles`  -- READ
+Allows to obtain information of all profiles. This endpoint can have queries, so as respond with pagination if needed.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+- **Queries available**:
+  - name: `/api/profiles?name=Root`
+  - size: `/api/profiles?size=1`
+  - page: `/api/profiles?page=0`
+  - sort: `/api/profiles?sort=id,asc`
+
+##### Response
+Without pagination:
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Developer",
+            "description": "Software Developer",
+            "keycode": "DEV1"
+        },
+        {
+            "id": 2,
+            "name": "Tester",
+            "description": "Software Tester",
+            "keycode": "TEST1"
+        },
+        {
+            "id": 3,
+            "name": "Designer",
+            "description": "UX/UI Designer",
+            "keycode": "DES1"
+        },
+        {
+            "id": 4,
+            "name": "Project Manager",
+            "description": "Project Manager",
+            "keycode": "PM1"
+        },
+        {
+            "id": 5,
+            "name": "Developer",
+            "description": "Software Developer",
+            "keycode": "DEV2"
+        },
+        {
+            "id": 6,
+            "name": "Tester",
+            "description": "Software Tester",
+            "keycode": "TEST2"
+        },
+        {
+            "id": 7,
+            "name": "Designer",
+            "description": "UX/UI Designer",
+            "keycode": "DES2"
+        },
+        {
+            "id": 8,
+            "name": "Project Manager",
+            "description": "Project Manager",
+            "keycode": "PM2"
+        },
+        {
+            "id": 9,
+            "name": "Account Manager",
+            "description": "Account Manager",
+            "keycode": "AM1"
+        },
+        {
+            "id": 10,
+            "name": "Account Manager",
+            "description": "Account Manager",
+            "keycode": "AM2"
+        }
+    ]
+}
+```
+
+With pagination - `GET /api/users?size=1`:
+```json
+{
+    "totalItems": 10,
+    "data": [
+        {
+            "id": 1,
+            "name": "Developer",
+            "description": "Software Developer",
+            "keycode": "DEV1"
+        }
+    ],
+    "totalPages": 10,
+    "currentPage": 0
+}
+```
+
+#### `GET /api/profiles/:profileId` -- READ
+Allows to obtain information of only one profile.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+
+##### Response
+```json
+{
+  "id": 10,
+  "name": "Account Manager",
+  "description": "Account Manager",
+  "keycode": "AM2"
+}
+```
+
 ### Users
 #### `GET /api/users`  -- READ
 Allows to obtain information of all users. This endpoint can have queries, so as respond with pagination if needed.
@@ -284,14 +396,3 @@ Allows to obtain information of only one user.
   "username": "cantseeme2"
 }
 ```
-
-### Profiles
-#### `GET /api/profiles`  -- READ
-Allows to obtain information of all profiles. This endpoint can have queries, so as respond with pagination if needed.
-##### Request
-- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
-- **Queries available**:
-  - name: `/api/profiles?name=Root`
-  - size: `/api/profiles?size=1`
-  - page: `/api/profiles?page=0`
-  - sort: `/api/profiles?sort=id,asc`
