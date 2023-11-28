@@ -1,8 +1,6 @@
 package com.bwl.apiusers.services;
 
-import com.bwl.apiusers.assemblers.BaseModelAssembler;
 import com.bwl.apiusers.assemblers.DTOModelAssembler;
-import com.bwl.apiusers.dtos.UserDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.repositories.BaseRepository;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,10 +40,14 @@ public class GenericReadService <T, D, R extends BaseRepository<T>, M extends DT
         try {
             T entity = repository.findById(id).orElseThrow(() -> new BaseNotFoundException(entityClass, id));
             D dto = Utils.convertToDTO(entity, dtoEntityClass);
-            EntityModel<D> entityModel = assembler.toModel(dto);
 
-            return ResponseEntity.ok(entityModel);
+            Map<String, Object> body = new HashMap<>();
+            body.put(entity.getClass().getSimpleName().toLowerCase(),dto);
 
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", body);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             if (e instanceof BaseNotFoundException) {
