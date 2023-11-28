@@ -1,6 +1,8 @@
 package com.bwl.apiusers.services;
 
 import com.bwl.apiusers.assemblers.BaseModelAssembler;
+import com.bwl.apiusers.assemblers.DTOModelAssembler;
+import com.bwl.apiusers.dtos.UserDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.repositories.BaseRepository;
@@ -20,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GenericReadService <T, D, R extends BaseRepository<T>, M extends BaseModelAssembler<T>> {
+public class GenericReadService <T, D, R extends BaseRepository<T>, M extends DTOModelAssembler<D, T>> {
     @Getter
     private final R repository;
 
@@ -40,8 +42,11 @@ public class GenericReadService <T, D, R extends BaseRepository<T>, M extends Ba
     public ResponseEntity<?> one( Integer id) {
         try {
             T entity = repository.findById(id).orElseThrow(() -> new BaseNotFoundException(entityClass, id));
-            EntityModel<T> entityModel = assembler.toModel(entity);
+            D dto = Utils.convertToDTO(entity, dtoEntityClass);
+            EntityModel<D> entityModel = assembler.toModel(dto);
+
             return ResponseEntity.ok(entityModel);
+
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             if (e instanceof BaseNotFoundException) {
