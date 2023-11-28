@@ -603,3 +603,188 @@ Allows the deletion of a client (only allowed if not related with any project).
 - **Authorization Header**: Include an `Authorization` header with a valid Authentication Bearer Token (provided at login) to authenticate the request.
 ##### Response
 - **Status Code**: 204 No Content
+
+## Projects
+#### `GET /api/projects` -- READ
+Allows to obtain information of all projects. This endpoint can have queries, so as respond with pagination if needed.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+- **Queries available**:
+  - name: `/api/users?name=Root`
+  - size: `/api/users?size=1`
+  - page: `/api/users?page=0`
+  - sort: `/api/users?sort=id,asc`
+##### Response
+- **Status Code**: 200 OK
+
+Without pagination:
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Cheyenne 2024",
+            "keycode": "CH2024",
+            "creationDate": "2023-11-21T19:39:49.000+00:00",
+            "description": "Pickup",
+            "idClient": 1,
+            "enabled": true
+        },
+        {
+            "id": 2,
+            "name": "Maybach Roadster 2024",
+            "keycode": "MB2024",
+            "creationDate": "2023-11-21T20:18:52.000+00:00",
+            "description": "SUV",
+            "idClient": 2,
+            "enabled": true
+        },
+        {
+            "id": 3,
+            "name": "Tiguan 2024",
+            "keycode": "TG2024",
+            "creationDate": "2023-11-21T20:22:40.000+00:00",
+            "description": "SUV",
+            "idClient": 3,
+            "enabled": true
+        },
+        {
+            "id": 4,
+            "name": "Corvette Stingray 2024",
+            "keycode": "CS2024",
+            "creationDate": "2023-11-21T20:35:37.000+00:00",
+            "description": "Sport",
+            "idClient": 1,
+            "enabled": true
+        },
+        {
+            "id": 5,
+            "name": "SLS 2024",
+            "keycode": "SS2024",
+            "creationDate": "2023-11-23T20:12:17.000+00:00",
+            "description": "Sport",
+            "idClient": 2,
+            "enabled": true
+        },
+        {
+            "id": 6,
+            "name": "Carrera GT 2024",
+            "keycode": "GT2024",
+            "creationDate": "2023-11-23T20:18:42.000+00:00",
+            "description": "Sport",
+            "idClient": 3,
+            "enabled": true
+        }
+    ]
+}
+```
+
+With pagination - `GET /api/clients?size=1`:
+```json
+{
+    "totalItems": 6,
+    "data": [
+        {
+            "id": 1,
+            "name": "Cheyenne 2024",
+            "keycode": "CH2024",
+            "creationDate": "2023-11-21T19:39:49.000+00:00",
+            "description": "Pickup",
+            "idClient": 1,
+            "enabled": true
+        }
+    ],
+    "totalPages": 6,
+    "currentPage": 0
+}
+```
+
+#### `GET /api/projects/:projectId` -- READ
+Allows to obtain information of only one client.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+
+##### Response
+- **Status Code**: 200 OK
+```json
+{
+    "id": 1,
+    "name": "Cheyenne 2024",
+    "keycode": "CH2024",
+    "creationDate": "2023-11-21T19:39:49.000+00:00",
+    "description": "Pickup",
+    "idClient": 1,
+    "enabled": true
+}
+```
+
+#### `POST /api/projects` -- CREATE
+Allows to create one user.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+```json
+{
+    "name": "Murcielago SVT Daibolo",
+    "keycode":"MVD",
+    "description":"sport",
+    "idClient": 3,
+    "idApplication": 2
+}
+```
+
+##### Response
+- **Status Code**: 201 Created
+```json
+{
+    "data": {
+        "project": {
+            "id": 7,
+            "name": "Murcielago SVT Daibolo",
+            "keycode": "MVD",
+            "creationDate": "2023-11-28T22:40:15.048+00:00",
+            "description": "sport",
+            "idClient": 3,
+            "enabled": true
+        }
+    }
+}
+```
+
+#### `PATCH /api/projects/:projectId` -- UPDATE
+Allows the update and modification of a project.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+```json
+{
+    "name": "Murcielago SVT Daibolo Performante",
+    "keycode": "MVD",
+    "description": "super sport",
+    "idClient": 3,
+    "enabled": true
+}
+```
+
+##### Response
+- **Status Code**: 200 OK
+```json
+{
+    "data": {
+        "project": {
+            "id": 7,
+            "name": "Murcielago SVT Daibolo Performante",
+            "keycode": "MVD",
+            "creationDate": "2023-11-28T22:40:15.048+00:00",
+            "description": "super sport",
+            "idClient": 3,
+            "enabled": true
+        }
+    }
+}
+```
+
+#### `DELETE /api/projects/:projectId` -- DELETE
+Allows the deletion of a project.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with a valid Authentication Bearer Token (provided at login) to authenticate the request.
+##### Response
+- **Status Code**: 204 No Content
