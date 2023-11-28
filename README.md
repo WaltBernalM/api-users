@@ -81,6 +81,7 @@ Allows to obtain information of all applications. This endpoint can have queries
 
 ##### Response 
 - **Status Code**: 200 OK
+
 Without pagination:
 ```json
 {
