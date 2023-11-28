@@ -140,6 +140,7 @@ public class GenericReadServiceTests {
         assertTrue(responseBody.containsKey("currentPage"));
         assertTrue(responseBody.containsKey("totalItems"));
         assertTrue(responseBody.containsKey("totalPages"));
+        assertTrue(responseBody.containsKey("data"));
     }
 
     @Test
