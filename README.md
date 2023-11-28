@@ -134,10 +134,14 @@ Allows to obtain information of only one application.
 - **Status Code**: 200 OK
 ```json
 {
-  "id": 2,
-  "name": "App 2",
-  "description": "Application 2",
-  "keycode": "APP2"
+  "data": {
+    "application": {
+      "id": 2,
+      "name": "App 2",
+      "description": "Application 2",
+      "keycode": "APP2"
+    }
+  }
 }
 ```
 
@@ -207,10 +211,14 @@ Allows to obtain information of only one permission.
 - **Status Code**: 200 OK
 ```json
 {
-  "id": 3,
-  "name": "User",
-  "description": "Read only access",
-  "keycode": "USER"
+  "data": {
+    "permission": {
+      "id": 3,
+      "name": "User",
+      "description": "Read only access",
+      "keycode": "USER"
+    }
+  }
 }
 ```
 
@@ -322,10 +330,14 @@ Allows to obtain information of only one profile.
 - **Status Code**: 200 OK
 ```json
 {
-  "id": 10,
-  "name": "Account Manager",
-  "description": "Account Manager",
-  "keycode": "AM2"
+  "data": {
+    "profile": {
+      "id": 10,
+      "name": "Account Manager",
+      "description": "Account Manager",
+      "keycode": "AM2"
+    }
+  }
 }
 ```
 
@@ -401,10 +413,14 @@ Allows to obtain information of only one user.
 - **Status Code**: 200 OK
 ```json
 {
-  "id": 2,
-  "name": "Walter Bernal",
-  "email": "wbernal@bwl.com.mx",
-  "username": "cantseeme2"
+  "data": {
+    "user": {
+      "id": 2,
+      "name": "Walter Bernal",
+      "email": "wbernal@bwl.com.mx",
+      "username": "cantseeme2"
+    }
+  }
 }
 ```
 
@@ -537,10 +553,14 @@ Allows to obtain information of only one client.
 - **Status Code**: 200 OK
 ```json
 {
-  "id": 3,
-  "name": "Volkswagen Group",
-  "shortName": "VW",
-  "enabled": true
+  "data": {
+    "client": {
+      "id": 3,
+      "name": "Volkswagen Group",
+      "shortName": "VW",
+      "enabled": true
+    }
+  }
 }
 ```
 
@@ -708,13 +728,17 @@ Allows to obtain information of only one client.
 - **Status Code**: 200 OK
 ```json
 {
-    "id": 1,
-    "name": "Cheyenne 2024",
-    "keycode": "CH2024",
-    "creationDate": "2023-11-21T19:39:49.000+00:00",
-    "description": "Pickup",
-    "idClient": 1,
-    "enabled": true
+    "data": {
+      "project": {
+        "id": 1,
+        "name": "Cheyenne 2024",
+        "keycode": "CH2024",
+        "creationDate": "2023-11-21T19:39:49.000+00:00",
+        "description": "Pickup",
+        "idClient": 1,
+        "enabled": true
+      }
+    }
 }
 ```
 
