@@ -1,7 +1,7 @@
 package com.bwl.apiusers;
 
 import com.bwl.apiusers.assemblers.ApplicationModelAssembler;
-import com.bwl.apiusers.dtos.DTO;
+import com.bwl.apiusers.dtos.ApplicationDTO;
 import com.bwl.apiusers.exceptions.BaseNotFoundException;
 import com.bwl.apiusers.exceptions.ErrorResponse;
 import com.bwl.apiusers.models.Application;
@@ -32,13 +32,13 @@ public class GenericReadServiceTests {
     private ApplicationModelAssembler mockAssembler;
 
     @InjectMocks
-    private GenericReadService<Application, DTO, ApplicationRepository, ApplicationModelAssembler> readService =
-            new GenericReadService<>(mockRepository, mockAssembler, Application.class, DTO.class);
+    private GenericReadService<Application, ApplicationDTO, ApplicationRepository, ApplicationModelAssembler> readService =
+            new GenericReadService<>(mockRepository, mockAssembler, Application.class, ApplicationDTO.class);
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
-        readService = new GenericReadService<>(mockRepository, mockAssembler, Application.class, DTO.class);
+        readService = new GenericReadService<>(mockRepository, mockAssembler, Application.class, ApplicationDTO.class);
     }
 
     @Test
@@ -54,18 +54,25 @@ public class GenericReadServiceTests {
     @Test
     public void testGetEntityById() {
         int entityId = 1;
-        Optional<Application> expectedEntity = Optional.of(new Application());
+        Optional<Application> mockApp = Optional.of(new Application());
+        ApplicationDTO expectedEntity = new ApplicationDTO();
 
-        when(mockRepository.findById(anyInt())).thenReturn(expectedEntity);
+        when(mockRepository.findById(anyInt())).thenReturn(mockApp);
 
-        EntityModel<Application> entityModel = EntityModel.of(expectedEntity.get());
-        when(mockAssembler.toModel(expectedEntity.get())).thenReturn(entityModel);
+        EntityModel<ApplicationDTO> entityModel = EntityModel.of(new ApplicationDTO());
+        when(mockAssembler.toModel(expectedEntity)).thenReturn(entityModel);
 
         ResponseEntity<?> actualEntity = readService.one(entityId);
 
         assertNotNull(actualEntity);
         assertEquals(HttpStatus.OK, actualEntity.getStatusCode());
-        assertTrue(actualEntity.getBody() instanceof EntityModel);
+
+        Map<String, Object> responseBody = (Map<String, Object>) actualEntity.getBody();
+
+        assertTrue(actualEntity.getBody() instanceof Map);
+
+        assertNotNull(responseBody);
+        assertTrue(responseBody.containsKey("data"));
     }
 
     @Test
@@ -76,7 +83,6 @@ public class GenericReadServiceTests {
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-        System.out.println(responseEntity.getBody());
 
         assertTrue(responseEntity.getBody() instanceof ErrorResponse);
     }
@@ -103,7 +109,6 @@ public class GenericReadServiceTests {
         list.add(app);
 
         when(mockRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(list));
-        when(mockAssembler.toModel(any())).thenReturn(EntityModel.of(app));
 
         ResponseEntity<?> responseEntity = readService.all(null, 0, Integer.MAX_VALUE, new String[]{"id","asc"});
 
@@ -123,8 +128,6 @@ public class GenericReadServiceTests {
         list.add(app);
 
         when(mockRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(list));
-        when(mockAssembler.toModel(any())).thenReturn(EntityModel.of(app));
-
         ResponseEntity<?> responseEntity = readService.all(null, 0, Integer.MAX_VALUE, new String[]{"id,asc"});
 
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
