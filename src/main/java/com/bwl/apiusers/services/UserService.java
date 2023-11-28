@@ -103,23 +103,6 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
         }
     }
 
-    @Override
-    public ResponseEntity<?> one(@PathVariable Integer id) {
-        try {
-            User user = userRepository.findById(id).orElseThrow(() -> new BaseNotFoundException(User.class, id));
-            UserDTO dto = Utils.convertToDTO(user, UserDTO.class);
-            EntityModel<UserDTO> entityModel = assembler.toModel(dto);
-
-            return ResponseEntity.ok(entityModel);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            if (e instanceof BaseNotFoundException) {
-                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UpdateUserDTO updateUserDTO) {
         try {
             // Verify if User id exists in db

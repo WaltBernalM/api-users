@@ -68,23 +68,6 @@ public class ClientService extends  GenericReadService<Client, ClientDTO, Client
         }
     }
 
-    @Override
-    public ResponseEntity<?> one(@PathVariable Integer id) {
-        try {
-            Client client = clientRepository.findById(id).orElseThrow(() -> new BaseNotFoundException(Client.class, id));
-            ClientDTO dto = Utils.convertToDTO(client, ClientDTO.class);
-            EntityModel<ClientDTO> entityModel = assembler.toModel(dto);
-
-            return ResponseEntity.ok(entityModel);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            if (e instanceof BaseNotFoundException) {
-                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     public ResponseEntity<?> updateClient(@PathVariable Integer id, @RequestBody UpdateClientDTO updateClientDTO) {
         try {
             Client clientInDb = clientRepository.findById(id)

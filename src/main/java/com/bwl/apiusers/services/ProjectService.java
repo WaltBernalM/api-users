@@ -89,22 +89,6 @@ public class ProjectService extends GenericReadService<Project, ProjectDTO, Proj
         }
     }
 
-    @Override
-    public ResponseEntity<?> one(@PathVariable Integer id) {
-        try {
-            Project project = projectRepository.findById(id).orElseThrow(() -> new BaseNotFoundException(Project.class, id));
-            ProjectDTO dto = Utils.convertToDTO(project, ProjectDTO.class);
-            EntityModel<ProjectDTO> entityModel = assembler.toModel(dto);
-            return ResponseEntity.ok(entityModel);
-        } catch( Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-            if (e instanceof BaseNotFoundException) {
-                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     public ResponseEntity<?> updateProject(@PathVariable Integer id, @RequestBody UpdateProjectDTO updateProjectDTO) {
         try {
             Project projectInDb = projectRepository.findById(id)
