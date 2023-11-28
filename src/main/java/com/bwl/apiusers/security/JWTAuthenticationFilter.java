@@ -58,15 +58,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.addHeader("Authorization", "Bearer " + token);
 
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("id", userDetails.getId());
+        body.put("username", userDetails.getUsername());
+        body.put("name", userDetails.getName());
+        body.put("enabled", userDetails.getEnabled());
+        body.put("profileKeycodes", userDetails.getProfileKeycodes());
+        body.put("profilePermissions", userDetails.getProfilePermissions());
+        body.put("token", "Bearer " + token);
+        body.put("idApplication", userDetails.getIdApplication());
+
         Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("id", userDetails.getId());
-        responseBody.put("username", userDetails.getUsername());
-        responseBody.put("name", userDetails.getName());
-        responseBody.put("enabled", userDetails.getEnabled());
-        responseBody.put("profileKeycodes", userDetails.getProfileKeycodes());
-        responseBody.put("profilePermissions", userDetails.getProfilePermissions());
-        responseBody.put("token", "Bearer " + token);
-        responseBody.put("idApplication", userDetails.getIdApplication());
+        responseBody.put("data", body);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(responseBody);
