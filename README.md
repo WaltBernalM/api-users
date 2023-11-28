@@ -24,7 +24,6 @@ $ ./mvnw spring-boot:run --quiet
 
 ## Access
 To start working and exploring the endpoints, you can post a login with the following JSON body:
-
 ```json
 {
   "username":"john117",
@@ -441,7 +440,6 @@ Allows to create one user.
 Allows the update and modification of a user.
 ##### Request
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
-- **Status Code**: 200 OK
 ```json
 {
     "username": "cantseeme2"
@@ -449,6 +447,7 @@ Allows the update and modification of a user.
 ```
 
 ##### Response
+- **Status Code**: 200 OK
 ```json
 {
   "data": {
@@ -466,6 +465,136 @@ Allows the update and modification of a user.
 Allows the deletion of a user.
 ##### Request
 - **Authorization Header**: Include an `Authorization` header with a valid Authentication Bearer Token (provided at login) to authenticate the request.
+##### Response
+- **Status Code**: 204 No Content
 
+### Clients
+#### `GET /api/clients` -- READ
+Allows to obtain information of all clients. This endpoint can have queries, so as respond with pagination if needed.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+- **Queries available**:
+  - name: `/api/users?name=Root`
+  - size: `/api/users?size=1`
+  - page: `/api/users?page=0`
+  - sort: `/api/users?sort=id,asc`
+##### Response
+- **Status Code**: 200 OK
+Without pagination:
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "General Motors",
+            "shortName": "GM",
+            "enabled": true
+        },
+        {
+            "id": 2,
+            "name": "Mercedes Benz GmbH",
+            "shortName": "MB",
+            "enabled": true
+        },
+        {
+            "id": 3,
+            "name": "Volkswagen Group",
+            "shortName": "VW",
+            "enabled": true
+        }
+    ]
+}
+```
+
+With pagination - `GET /api/clients?size=1`:
+```json
+{
+    "totalItems": 3,
+    "data": [
+        {
+            "id": 1,
+            "name": "General Motors",
+            "shortName": "GM",
+            "enabled": true
+        }
+    ],
+    "totalPages": 3,
+    "currentPage": 0
+}
+```
+
+#### `GET /api/clients/:clientId` -- READ
+Allows to obtain information of only one client.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+
+##### Response
+- **Status Code**: 200 OK
+```json
+{
+  "id": 3,
+  "name": "Volkswagen Group",
+  "shortName": "VW",
+  "enabled": true
+}
+```
+
+#### `POST /api/clients` -- CREATE
+Allows to create one user.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+```json
+{
+  "name":"Honda Automotive Group Japan",
+  "shortName": "HONDA"
+}
+```
+
+##### Response
+- **Status Code**: 201 Created
+```json
+{
+  "data": {
+    "client": {
+      "id": 4, 
+      "name": "Honda Automotive Group Japan",
+      "shortName": "HONDA", 
+      "enabled": true
+    }
+  }
+}
+```
+
+#### `PATCH /api/clients/:clientId` -- UPDATE
+Allows the update and modification of a user.
+##### Request
+- **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
+```json
+{
+  "name": "Mazda Automotive",
+  "shortName": "MAZDA",
+  "enabled": true
+}
+```
+
+##### Response
+- **Status Code**: 200 OK
+```json
+{
+    "data": {
+        "client": {
+            "id": 6,
+            "name": "Mazda Automotive",
+            "shortName": "MAZDA",
+            "enabled": true
+        }
+    }
+}
+```
+
+#### `DELETE /api/clients/:clientId` -- DELETE
+Allows the deletion of a client (only allowed if not related with any project).
+##### Request
+- **Authorization Header**: Include an `Authorization` header with a valid Authentication Bearer Token (provided at login) to authenticate the request.
 ##### Response
 - **Status Code**: 204 No Content
