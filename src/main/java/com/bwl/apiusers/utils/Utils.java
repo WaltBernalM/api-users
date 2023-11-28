@@ -40,11 +40,16 @@ public class Utils {
             response.put("data", entities);
         } else {
             List<D> dtoEntities = new ArrayList<>();
+            String entityName = "";
             for (T ent : entities) {
+                entityName = ent.getClass().getSimpleName().toLowerCase();
                 D dto = Utils.convertToDTO(ent, dtoEntityClass);
                 dtoEntities.add(dto);
             }
-            response.put("data", dtoEntities);
+            entityName += "s";
+            Map<String, Object> body = new HashMap<>();
+            body.put(entityName, dtoEntities);
+            response.put("data", body);
         }
     }
 
