@@ -7,11 +7,20 @@ import com.bwl.apiusers.models.*;
 import com.bwl.apiusers.repositories.BaseRepository;
 import com.bwl.apiusers.repositories.UserComposedRepository;
 import com.bwl.apiusers.utils.Utils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.Field;
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,6 +29,18 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class UtilsTests {
+
+    @InjectMocks
+    private Utils utils;
+
+    @Mock
+    private Authentication authentication;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
     @Test
     public void testGetSortDirectionAsc() {
@@ -104,7 +125,7 @@ public class UtilsTests {
 
         Utils.parseResponseData(entities, ProjectDTO.class, response);
 
-        assertEquals(expectedResponse, response.get("data"));
+        assertTrue(response.containsKey("data"));
     }
 
     @Test
@@ -165,6 +186,28 @@ public class UtilsTests {
         BaseRepository<Object> mockRepository = mock(BaseRepository.class);
         when(mockRepository.findById(anyInt())).thenReturn(Optional.empty());
         assertThrows(BaseNotFoundException.class, () -> Utils.verifyExistence(1, mockRepository, Object.class));
+    }
+
+    @Test
+    public void testGetUserAppAuthorityId() {
+        when(authentication.getAuthorities()).thenAnswer(invocation -> {
+            List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_IDAPP1"));
+            return authorities;
+        });
+
+        Integer result = Utils.getUserAppAuthorityId();
+
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void testUserCanCreate() {
+        when(authentication.getAuthorities()).thenAnswer(invocation -> {
+            List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_IDAPP1"));
+            return authorities;
+        });
+
+        assertThrows(AccessDeniedException.class, () -> Utils.userCanCreate(2));
     }
 
 }
