@@ -129,6 +129,14 @@ public class UserService extends GenericReadService<User, UserDTO, UserRepositor
             if (userProfilesToUpdate.isPresent()) {
                 for (Integer profileId : userProfilesToUpdate.get()) {
                     Profile profile = Utils.verifyExistence(profileId, profileRepository, Profile.class).get();
+
+                    // Verify if the profile belongs to the Application authorization context
+                    Integer applicationIdInProfile = profile.getIdApplication().getId();
+                    Integer userAppAuthorityId = Utils.getUserAppAuthorityId();
+                    if (!applicationIdInProfile.equals(userAppAuthorityId)) {
+                        throw new AccessDeniedException("An idProfile is not related to the Application in context");
+                    }
+
                     updateProfiles = true;
                     profilesToSet.add(profile);
                 }
