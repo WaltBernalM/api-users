@@ -34,26 +34,28 @@ To start working and exploring the endpoints, you can post a login with the foll
 You will receive a response as follows, with a Json Web Token, that you'll have to send as Authorization token in the header of any further request.
 ```json
 {
-  "id": 3, 
-  "username": "john117", 
-  "name": "John Spartan", 
-  "enabled": true, 
-  "profileKeycodes": [
-    "DES2",
-    "AM2"
-  ], 
-  "profilePermissions": {
-    "DES2": {
-      "permissionKeyCode_3": "USER"
-    }, 
-    "AM2": {
-      "permissionKeyCode_3": "USER", 
-      "permissionKeyCode_2": "ADMIN",
-      "permissionKeyCode_1": "ROOT"
-    }
+  "data": {
+    "id": 3,
+    "username": "john117",
+    "name": "John Spartan",
+    "enabled": true,
+    "profileKeycodes": [
+      "DES2",
+      "AM2"
+    ],
+    "profilePermissions": {
+      "DES2": {
+        "permissionKeyCode_3": "USER"
+      },
+      "AM2": {
+        "permissionKeyCode_3": "USER",
+        "permissionKeyCode_2": "ADMIN",
+        "permissionKeyCode_1": "ROOT"
+      }
     },
     "token": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huMTE3IiwiZXhwIjoxNzAxMjAwNTYxLCJpZEFwcGxpY2F0aW9uIjoyLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiLCJST0xFX0FETUlOIiwiUk9MRV9ST09UIiwiUk9MRV9JREFQUDIiXX0.yeR6txxJdm8jz2Jq-7iRVE1ljkGGZDq5BbGwH-u1-UU",
     "idApplication": 2
+  }
 }
 ```
 
@@ -85,24 +87,26 @@ Allows to obtain information of all applications. This endpoint can have queries
 Without pagination:
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "name": "App 1",
-      "description": "Application 1",
-      "keycode": "APP1",
-      "username": null,
-      "shortName": null
-    },
-    {
-      "id": 2,
-      "name": "App 2",
-      "description": "Application 2",
-      "keycode": "APP2",
-      "username": null,
-      "shortName": null
-    }
-  ]
+  "data": {
+    "applications": [
+      {
+        "id": 1,
+        "name": "App 1",
+        "description": "Application 1",
+        "keycode": "APP1",
+        "username": null,
+        "shortName": null
+      },
+      {
+        "id": 2,
+        "name": "App 2",
+        "description": "Application 2",
+        "keycode": "APP2",
+        "username": null,
+        "shortName": null
+      }
+    ]
+  }
 }
 ```
 
@@ -110,16 +114,18 @@ With pagination - `GET /api/applications?size=1`:
 ```json
 {
   "totalItems": 2,
-  "data": [
-    {
-      "id": 1,
-      "name": "App 1",
-      "description": "Application 1",
-      "keycode": "APP1",
-      "username": null,
-      "shortName": null
-    }
-  ],
+  "data": {
+    "applications": [
+      {
+        "id": 1,
+        "name": "App 1",
+        "description": "Application 1",
+        "keycode": "APP1",
+        "username": null,
+        "shortName": null
+      }
+    ]
+  },
   "totalPages": 2,
   "currentPage": 0
 }
@@ -162,26 +168,28 @@ Allows to obtain information of all permissions. This endpoint can have queries,
 Without pagination:
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "name": "Root",
-      "description": "Full CRUD",
-      "keycode": "ROOT"
-    },
-    {
-      "id": 2,
-      "name": "Administrator",
-      "description": "Access to CRU",
-      "keycode": "ADMIN"
-    },
-    {
-      "id": 3,
-      "name": "User",
-      "description": "Read only access",
-      "keycode": "USER"
-    }
-  ]
+  "data": {
+    "permissions": [
+      {
+        "id": 1,
+        "name": "Root",
+        "description": "Full CRUD",
+        "keycode": "ROOT"
+      },
+      {
+        "id": 2,
+        "name": "Administrator",
+        "description": "Access to CRU",
+        "keycode": "ADMIN"
+      },
+      {
+        "id": 3,
+        "name": "User",
+        "description": "Read only access",
+        "keycode": "USER"
+      }
+    ]
+  }
 }
 ```
 
@@ -189,14 +197,16 @@ With pagination - `GET /api/permissions?size=1`:
 ```json
 {
   "totalItems": 3,
-  "data": [
-    {
-      "id": 1,
-      "name": "Root",
-      "description": "Full CRUD",
-      "keycode": "ROOT"
-    }
-  ],
+  "data": {
+    "permissions": [
+      {
+        "id": 1,
+        "name": "Root",
+        "description": "Full CRUD",
+        "keycode": "ROOT"
+      }
+    ]
+  },
   "totalPages": 3,
   "currentPage": 0
 }
@@ -239,68 +249,70 @@ Allows to obtain information of all profiles. This endpoint can have queries, so
 Without pagination:
 ```json
 {
-    "data": [
+    "data": {
+      "profiles": [
         {
-            "id": 1,
-            "name": "Developer",
-            "description": "Software Developer",
-            "keycode": "DEV1"
+          "id": 1,
+          "name": "Developer",
+          "description": "Software Developer",
+          "keycode": "DEV1"
         },
         {
-            "id": 2,
-            "name": "Tester",
-            "description": "Software Tester",
-            "keycode": "TEST1"
+          "id": 2,
+          "name": "Tester",
+          "description": "Software Tester",
+          "keycode": "TEST1"
         },
         {
-            "id": 3,
-            "name": "Designer",
-            "description": "UX/UI Designer",
-            "keycode": "DES1"
+          "id": 3,
+          "name": "Designer",
+          "description": "UX/UI Designer",
+          "keycode": "DES1"
         },
         {
-            "id": 4,
-            "name": "Project Manager",
-            "description": "Project Manager",
-            "keycode": "PM1"
+          "id": 4,
+          "name": "Project Manager",
+          "description": "Project Manager",
+          "keycode": "PM1"
         },
         {
-            "id": 5,
-            "name": "Developer",
-            "description": "Software Developer",
-            "keycode": "DEV2"
+          "id": 5,
+          "name": "Developer",
+          "description": "Software Developer",
+          "keycode": "DEV2"
         },
         {
-            "id": 6,
-            "name": "Tester",
-            "description": "Software Tester",
-            "keycode": "TEST2"
+          "id": 6,
+          "name": "Tester",
+          "description": "Software Tester",
+          "keycode": "TEST2"
         },
         {
-            "id": 7,
-            "name": "Designer",
-            "description": "UX/UI Designer",
-            "keycode": "DES2"
+          "id": 7,
+          "name": "Designer",
+          "description": "UX/UI Designer",
+          "keycode": "DES2"
         },
         {
-            "id": 8,
-            "name": "Project Manager",
-            "description": "Project Manager",
-            "keycode": "PM2"
+          "id": 8,
+          "name": "Project Manager",
+          "description": "Project Manager",
+          "keycode": "PM2"
         },
         {
-            "id": 9,
-            "name": "Account Manager",
-            "description": "Account Manager",
-            "keycode": "AM1"
+          "id": 9,
+          "name": "Account Manager",
+          "description": "Account Manager",
+          "keycode": "AM1"
         },
         {
-            "id": 10,
-            "name": "Account Manager",
-            "description": "Account Manager",
-            "keycode": "AM2"
+          "id": 10,
+          "name": "Account Manager",
+          "description": "Account Manager",
+          "keycode": "AM2"
         }
-    ]
+      ]
+    }
 }
 ```
 
@@ -308,14 +320,16 @@ With pagination - `GET /api/users?size=1`:
 ```json
 {
     "totalItems": 10,
-    "data": [
+    "data": {
+      "profiles": [
         {
-            "id": 1,
-            "name": "Developer",
-            "description": "Software Developer",
-            "keycode": "DEV1"
+          "id": 1,
+          "name": "Developer",
+          "description": "Software Developer",
+          "keycode": "DEV1"
         }
-    ],
+      ]
+    },
     "totalPages": 10,
     "currentPage": 0
 }
@@ -358,32 +372,34 @@ Allows to obtain information of all users. This endpoint can have queries, so as
 Without pagination:
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "name": "Eli Bernal",
-      "email": "ebernal@bwl.com.mx",
-      "username": "ebernal"
-    },
-    {
-      "id": 2,
-      "name": "Walter Bernal",
-      "email": "wbernal@bwl.com.mx",
-      "username": "cantseeme2"
-    },
-    {
-      "id": 3,
-      "name": "John Spartan",
-      "email": "emontero@bwl.com.mx",
-      "username": "john117"
-    },
-    {
-      "id": 4,
-      "name": "Walter Bernal",
-      "email": "wbernal@bwl.com.mx",
-      "username": "wbernal"
-    }
-  ]
+  "data": {
+    "users": [
+      {
+        "id": 1,
+        "name": "Eli Bernal",
+        "email": "ebernal@bwl.com.mx",
+        "username": "ebernal"
+      },
+      {
+        "id": 2,
+        "name": "Walter Bernal",
+        "email": "wbernal@bwl.com.mx",
+        "username": "cantseeme2"
+      },
+      {
+        "id": 3,
+        "name": "John Spartan",
+        "email": "emontero@bwl.com.mx",
+        "username": "john117"
+      },
+      {
+        "id": 4,
+        "name": "Walter Bernal",
+        "email": "wbernal@bwl.com.mx",
+        "username": "wbernal"
+      }
+    ]
+  }
 }
 ```
 
@@ -391,14 +407,16 @@ With pagination - `GET /api/users?size=1`:
 ```json
 {
   "totalItems": 4,
-  "data": [
-    {
-      "id": 1,
-      "name": "Eli Bernal",
-      "email": "ebernal@bwl.com.mx",
-      "username": "ebernal"
-    }
-  ],
+  "data": {
+    "users": [
+      {
+        "id": 1,
+        "name": "Eli Bernal",
+        "email": "ebernal@bwl.com.mx",
+        "username": "ebernal"
+      }
+    ]
+  },
   "totalPages": 4,
   "currentPage": 0
 }
@@ -462,7 +480,10 @@ Allows the update and modification of a user.
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 ```json
 {
-    "username": "cantseeme2"
+  "name": "Walter Eli Bernal",
+  "email": "wbernal@bwl.com.mx",
+  "username": "cantseeme2",
+  "idProfiles": [5,6]
 }
 ```
 
@@ -473,7 +494,7 @@ Allows the update and modification of a user.
   "data": {
     "user": {
       "id": 2,
-      "name": "Walter Bernal",
+      "name": "Walter Eli Bernal",
       "email": "wbernal@bwl.com.mx",
       "username": "cantseeme2"
     }
@@ -494,36 +515,38 @@ Allows to obtain information of all clients. This endpoint can have queries, so 
 ##### Request
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 - **Queries available**:
-  - name: `/api/users?name=Root`
-  - size: `/api/users?size=1`
-  - page: `/api/users?page=0`
-  - sort: `/api/users?sort=id,asc`
+  - name: `/api/clients?name=Root`
+  - size: `/api/clients?size=1`
+  - page: `/api/clients?page=0`
+  - sort: `/api/clients?sort=id,asc`
 ##### Response
 - **Status Code**: 200 OK
 
 Without pagination:
 ```json
 {
-    "data": [
+    "data": {
+      "clients": [
         {
-            "id": 1,
-            "name": "General Motors",
-            "shortName": "GM",
-            "enabled": true
+          "id": 1,
+          "name": "General Motors",
+          "shortName": "GM",
+          "enabled": true
         },
         {
-            "id": 2,
-            "name": "Mercedes Benz GmbH",
-            "shortName": "MB",
-            "enabled": true
+          "id": 2,
+          "name": "Mercedes Benz GmbH",
+          "shortName": "MB",
+          "enabled": true
         },
         {
-            "id": 3,
-            "name": "Volkswagen Group",
-            "shortName": "VW",
-            "enabled": true
+          "id": 3,
+          "name": "Volkswagen Group",
+          "shortName": "VW",
+          "enabled": true
         }
-    ]
+      ]
+    }
 }
 ```
 
@@ -531,14 +554,16 @@ With pagination - `GET /api/clients?size=1`:
 ```json
 {
     "totalItems": 3,
-    "data": [
+    "data": {
+      "clients": [
         {
-            "id": 1,
-            "name": "General Motors",
-            "shortName": "GM",
-            "enabled": true
+          "id": 1,
+          "name": "General Motors",
+          "shortName": "GM",
+          "enabled": true
         }
-    ],
+      ]
+    },
     "totalPages": 3,
     "currentPage": 0
 }
@@ -630,72 +655,74 @@ Allows to obtain information of all projects. This endpoint can have queries, so
 ##### Request
 - **Authorization Header**: Include an `Authorization` header with valid Authentication Bearer Token (provided at login) to authenticate the request.
 - **Queries available**:
-  - name: `/api/users?name=Root`
-  - size: `/api/users?size=1`
-  - page: `/api/users?page=0`
-  - sort: `/api/users?sort=id,asc`
+  - name: `/api/projects?name=Root`
+  - size: `/api/projects?size=1`
+  - page: `/api/projects?page=0`
+  - sort: `/api/projects?sort=id,asc`
 ##### Response
 - **Status Code**: 200 OK
 
 Without pagination:
 ```json
 {
-    "data": [
+    "data": {
+      "projects": [
         {
-            "id": 1,
-            "name": "Cheyenne 2024",
-            "keycode": "CH2024",
-            "creationDate": "2023-11-21T19:39:49.000+00:00",
-            "description": "Pickup",
-            "idClient": 1,
-            "enabled": true
+          "id": 1,
+          "name": "Cheyenne 2024",
+          "keycode": "CH2024",
+          "creationDate": "2023-11-21T19:39:49.000+00:00",
+          "description": "Pickup",
+          "idClient": 1,
+          "enabled": true
         },
         {
-            "id": 2,
-            "name": "Maybach Roadster 2024",
-            "keycode": "MB2024",
-            "creationDate": "2023-11-21T20:18:52.000+00:00",
-            "description": "SUV",
-            "idClient": 2,
-            "enabled": true
+          "id": 2,
+          "name": "Maybach Roadster 2024",
+          "keycode": "MB2024",
+          "creationDate": "2023-11-21T20:18:52.000+00:00",
+          "description": "SUV",
+          "idClient": 2,
+          "enabled": true
         },
         {
-            "id": 3,
-            "name": "Tiguan 2024",
-            "keycode": "TG2024",
-            "creationDate": "2023-11-21T20:22:40.000+00:00",
-            "description": "SUV",
-            "idClient": 3,
-            "enabled": true
+          "id": 3,
+          "name": "Tiguan 2024",
+          "keycode": "TG2024",
+          "creationDate": "2023-11-21T20:22:40.000+00:00",
+          "description": "SUV",
+          "idClient": 3,
+          "enabled": true
         },
         {
-            "id": 4,
-            "name": "Corvette Stingray 2024",
-            "keycode": "CS2024",
-            "creationDate": "2023-11-21T20:35:37.000+00:00",
-            "description": "Sport",
-            "idClient": 1,
-            "enabled": true
+          "id": 4,
+          "name": "Corvette Stingray 2024",
+          "keycode": "CS2024",
+          "creationDate": "2023-11-21T20:35:37.000+00:00",
+          "description": "Sport",
+          "idClient": 1,
+          "enabled": true
         },
         {
-            "id": 5,
-            "name": "SLS 2024",
-            "keycode": "SS2024",
-            "creationDate": "2023-11-23T20:12:17.000+00:00",
-            "description": "Sport",
-            "idClient": 2,
-            "enabled": true
+          "id": 5,
+          "name": "SLS 2024",
+          "keycode": "SS2024",
+          "creationDate": "2023-11-23T20:12:17.000+00:00",
+          "description": "Sport",
+          "idClient": 2,
+          "enabled": true
         },
         {
-            "id": 6,
-            "name": "Carrera GT 2024",
-            "keycode": "GT2024",
-            "creationDate": "2023-11-23T20:18:42.000+00:00",
-            "description": "Sport",
-            "idClient": 3,
-            "enabled": true
+          "id": 6,
+          "name": "Carrera GT 2024",
+          "keycode": "GT2024",
+          "creationDate": "2023-11-23T20:18:42.000+00:00",
+          "description": "Sport",
+          "idClient": 3,
+          "enabled": true
         }
-    ]
+      ]
+    }
 }
 ```
 
@@ -703,17 +730,19 @@ With pagination - `GET /api/clients?size=1`:
 ```json
 {
     "totalItems": 6,
-    "data": [
+    "data": {
+      "projects": [
         {
-            "id": 1,
-            "name": "Cheyenne 2024",
-            "keycode": "CH2024",
-            "creationDate": "2023-11-21T19:39:49.000+00:00",
-            "description": "Pickup",
-            "idClient": 1,
-            "enabled": true
+          "id": 1,
+          "name": "Cheyenne 2024",
+          "keycode": "CH2024",
+          "creationDate": "2023-11-21T19:39:49.000+00:00",
+          "description": "Pickup",
+          "idClient": 1,
+          "enabled": true
         }
-    ],
+      ]
+    },
     "totalPages": 6,
     "currentPage": 0
 }
