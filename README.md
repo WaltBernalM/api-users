@@ -2,6 +2,7 @@
 
 ## Objective
 This project allows to manage the information that is shared in the applications for the control of activities inside an organization.
+Is a comprehensive exploration of the benefits that Spring can offer to develop a REST API service.
 
 ## Description
 The API allows the connection between two applications to manage the activities related.
