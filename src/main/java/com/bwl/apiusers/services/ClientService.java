@@ -11,7 +11,6 @@ import com.bwl.apiusers.models.Project;
 import com.bwl.apiusers.repositories.ClientRepository;
 import com.bwl.apiusers.repositories.ProjectRepository;
 import com.bwl.apiusers.utils.Utils;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
