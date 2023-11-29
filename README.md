@@ -18,6 +18,7 @@ The API has authentication and authorization through several endpoints, also tha
 
 ## Installation
 The API has built in database information, however, it is needed to have a database named bwl_users.
+You will also need to create an env.properties file with the environment variables indicated in application.properties file.   
 Then you'll need to run the ApiUsersApplication.java main class with:
 ```shell
 $ ./mvnw spring-boot:run --quiet
